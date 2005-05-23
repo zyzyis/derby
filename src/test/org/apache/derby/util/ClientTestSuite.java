@@ -77,7 +77,7 @@ public class ClientTestSuite extends TestSuite {
             e.printStackTrace();
         }
         DerbyDataSource ds = new DerbyDataSource();
-        ds.setShutdownDatabase(true);
+        ds.setShutdown(true);
         try {
             new EmbeddedConnectionFactory().getConnection(ds);
         } catch (SQLException e) {

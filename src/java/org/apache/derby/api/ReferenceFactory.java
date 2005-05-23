@@ -19,8 +19,8 @@ package org.apache.derby.api;
 import java.util.Hashtable;
 import javax.naming.Context;
 import javax.naming.Name;
-import javax.naming.NamingException;
 import javax.naming.Reference;
+import javax.naming.StringRefAddr;
 import javax.naming.spi.ObjectFactory;
 
 /**
@@ -29,11 +29,22 @@ import javax.naming.spi.ObjectFactory;
  * @version $Rev$ $Date$
  */
 public final class ReferenceFactory implements ObjectFactory {
-    static Reference getReference(BasicDataSource ds) throws NamingException {
-        throw new UnsupportedOperationException();
-    }
-
     public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable environment) throws Exception {
-        throw new UnsupportedOperationException();
+        // extract the URL from the reference
+        Reference ref = (Reference) obj;
+        StringRefAddr addr = (StringRefAddr) ref.get("Derby URL");
+        String url = (String) addr.getContent();
+
+        // instantiate the DataSource
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        if (cl == null) {
+            cl = getClass().getClassLoader();
+        }
+        Class dsClass = cl.loadClass(ref.getClassName());
+
+        // load the properties into the DataSource
+        BasicDataSource ds = (BasicDataSource) dsClass.newInstance();
+        ds.loadURL(url);
+        return ds;
     }
 }

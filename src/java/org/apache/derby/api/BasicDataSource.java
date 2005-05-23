@@ -19,6 +19,10 @@ package org.apache.derby.api;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Properties;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.apache.derby.impl.DefaultConnectionFactory;
 
@@ -44,9 +48,9 @@ public abstract class BasicDataSource implements Serializable {
     // Derby specific properties
     private String connectionFactoryClass;
     private transient ConnectionFactory connectionFactory;
-    private boolean createDatabase;
+    private boolean create;
     private boolean upgrade;
-    private boolean shutdownDatabase;
+    private boolean shutdown;
 
     public String getDatabaseName() {
         return databaseName;
@@ -228,12 +232,12 @@ public abstract class BasicDataSource implements Serializable {
         this.logWriter = logWriter;
     }
 
-    public boolean getCreateDatabase() {
-        return createDatabase;
+    public boolean getCreate() {
+        return create;
     }
 
-    public void setCreateDatabase(boolean createDatabase) {
-        this.createDatabase = createDatabase;
+    public void setCreate(boolean create) {
+        this.create = create;
     }
 
     public boolean getUpgrade() {
@@ -244,12 +248,12 @@ public abstract class BasicDataSource implements Serializable {
         this.upgrade = upgrade;
     }
 
-    public boolean getShutdownDatabase() {
-        return shutdownDatabase;
+    public boolean getShutdown() {
+        return shutdown;
     }
 
-    public void setShutdownDatabase(boolean shutdownDatabase) {
-        this.shutdownDatabase = shutdownDatabase;
+    public void setShutdown(boolean shutdown) {
+        this.shutdown = shutdown;
     }
 
     /**
@@ -276,6 +280,145 @@ public abstract class BasicDataSource implements Serializable {
             return other.dataSourceName == null;
         } else {
             return dataSourceName.equals(other.dataSourceName);
+        }
+    }
+
+    /**
+     * Package protected method for initializing from a set of Properties.
+     *
+     * @param props properties to load
+     */
+    void loadProperties(Properties props) {
+        for (Iterator i = props.entrySet().iterator(); i.hasNext();) {
+            Map.Entry entry = (Map.Entry) i.next();
+            String key = (String) entry.getKey();
+            String value = (String) entry.getValue();
+            if ("serverName".equals(key)) {
+                setServerName(value);
+            } else if ("portNumber".equals(key)) {
+                setPortNumber(Integer.valueOf(value).intValue());
+            } else if ("databaseName".equals(key)) {
+                setDatabaseName(value);
+            } else if ("user".equals(key)) {
+                setUser(value);
+            } else if ("password".equals(key)) {
+                setPassword(value);
+            } else if ("connectionFactoryClass".equals(key)) {
+                setConnectionFactoryClass(value);
+            } else if ("create".equals(key)) {
+                setCreate(Boolean.valueOf(value).booleanValue());
+            } else if ("upgrade".equals(key)) {
+                setUpgrade(Boolean.valueOf(value).booleanValue());
+            } else if ("shutdown".equals(key)) {
+                setShutdown(Boolean.valueOf(value).booleanValue());
+            }
+        }
+    }
+
+    /**
+     * Package protected method for initializing from a JDBC URL.
+     *
+     * @param url the URL to load from
+     */
+    void loadURL(String url) {
+        // remove jdbc:derby: prefix
+        url = url.substring(11);
+        if (url.startsWith("//")) {
+            // serverName specified in url
+            int index = url.indexOf(';');
+            String serverName;
+            if (index == -1) {
+                serverName = url.substring(2);
+                url = "";
+            } else {
+                serverName = url.substring(2, index);
+                url = url.substring(index);
+            }
+
+            // extract databaseName
+            index = serverName.indexOf('/');
+            if (index != -1) {
+                setDatabaseName(serverName.substring(index+1).trim());
+                serverName = serverName.substring(0, index);
+            }
+
+            // extract portNumber
+            index = serverName.indexOf(':');
+            if (index != -1) {
+                setPortNumber(Integer.valueOf(serverName.substring(index+1)).intValue());
+                serverName = serverName.substring(0, index);
+            }
+            setServerName(serverName.trim());
+        } else {
+            String name;
+            int index = url.indexOf(';');
+            if (index == -1) {
+                name = url;
+            } else {
+                name = url.substring(0, index);
+                url = url.substring(index);
+            }
+            name = name.trim();
+            if (name.length() > 0) {
+                setDatabaseName(name);
+            }
+        }
+
+        // extract properties from URL
+        Properties props = new Properties();
+        StringTokenizer tok = new StringTokenizer(url, ";");
+        while (tok.hasMoreTokens()) {
+            String pair = tok.nextToken();
+            int index = pair.indexOf('=');
+            if (index == -1) {
+                continue;
+            }
+            String key = pair.substring(0, index);
+            String value = pair.substring(index+1);
+            props.setProperty(key.trim(), value.trim());
+        }
+        loadProperties(props);
+    }
+
+    /**
+     * Package protected method for converting a DataSource to a Derby JDBC URL.
+     *
+     * @return a URL enconded form of this DataSource
+     */
+    String toURL() {
+        StringBuffer buf = new StringBuffer(256);
+        buf.append("jdbc:derby:");
+        if (serverName != null) {
+            append(buf, "serverName", serverName);
+            append(buf, "portNumber", portNumber, 1527);
+        }
+        append(buf, "databaseName", databaseName);
+        append(buf, "description", description);
+        append(buf, "user", user);
+        append(buf, "password", password);
+        append(buf, "dataSourceName", dataSourceName);
+        append(buf, "connectionFactoryClass", connectionFactoryClass);
+        append(buf, "create", create);
+        append(buf, "upgrade", upgrade);
+        append(buf, "shutdown", shutdown);
+        return buf.toString();
+    }
+
+    private void append(StringBuffer buf, String key, Object value) {
+        if (value != null) {
+            buf.append(';').append(key).append('=').append(value);
+        }
+    }
+
+    private void append(StringBuffer buf, String key, int value, int def) {
+        if (value != def) {
+            buf.append(';').append(key).append('=').append(value);
+        }
+    }
+
+    private void append(StringBuffer buf, String key, boolean value) {
+        if (value) {
+            buf.append(';').append(key).append("=true");
         }
     }
 }

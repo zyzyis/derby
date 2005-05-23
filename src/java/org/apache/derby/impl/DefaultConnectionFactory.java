@@ -23,12 +23,15 @@ import org.apache.derby.api.ConnectionFactory;
 import org.apache.derby.api.BasicDataSource;
 
 /**
+ * Defautl ConnectionFactory implementation that chooses between Client and Embedded connection depending
+ * on whether the serverName property is set or not.
+ *  
  * @version $Rev$ $Date$
  */
 public class DefaultConnectionFactory implements ConnectionFactory {
     public Connection getConnection(BasicDataSource ds) throws SQLException {
         ConnectionFactory cf;
-        if (ds.getServerName() == null) {
+        if (ds.getServerName() != null) {
             cf = new ClientConnectionFactory();
         } else {
             cf = new EmbeddedConnectionFactory();
@@ -38,7 +41,7 @@ public class DefaultConnectionFactory implements ConnectionFactory {
 
     public Connection getConnection(BasicDataSource ds, String user, String password) throws SQLException {
         ConnectionFactory cf;
-        if (ds.getServerName() == null) {
+        if (ds.getServerName() != null) {
             cf = new ClientConnectionFactory();
         } else {
             cf = new EmbeddedConnectionFactory();

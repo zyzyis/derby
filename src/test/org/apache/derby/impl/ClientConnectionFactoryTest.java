@@ -51,7 +51,7 @@ public class ClientConnectionFactoryTest extends TestCase {
         ds = new DerbyDataSource();
         ds.setServerName("localhost");
         ds.setDatabaseName("testdb");
-        ds.setCreateDatabase(true);
+        ds.setCreate(true);
         ds.setUser("testuser");
         ds.setPassword("testpassword");
         cf = new ClientConnectionFactory();

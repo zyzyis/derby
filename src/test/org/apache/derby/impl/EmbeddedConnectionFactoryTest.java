@@ -45,14 +45,14 @@ public class EmbeddedConnectionFactoryTest extends TestCase {
     }
 
     public void testDerbyOptions() throws SQLException {
-        ds.setCreateDatabase(false);
-        ds.setShutdownDatabase(false);
+        ds.setCreate(false);
+        ds.setShutdown(false);
         EmbeddedSimpleDataSource eds = cf.getDataSource(ds);
         assertNull(eds.getCreateDatabase());
         assertNull(eds.getShutdownDatabase());
 
-        ds.setCreateDatabase(true);
-        ds.setShutdownDatabase(true);
+        ds.setCreate(true);
+        ds.setShutdown(true);
         eds = cf.getDataSource(ds);
         assertEquals("create", eds.getCreateDatabase());
         assertEquals("shutdown", eds.getShutdownDatabase());
@@ -60,7 +60,7 @@ public class EmbeddedConnectionFactoryTest extends TestCase {
 
     public void testCreateDatabase() throws SQLException {
         ds.setDatabaseName("testdb");
-        ds.setCreateDatabase(true);
+        ds.setCreate(true);
 
         // connect first time, should be no warning
         Connection c = cf.getConnection(ds);
@@ -75,8 +75,8 @@ public class EmbeddedConnectionFactoryTest extends TestCase {
         c.close();
 
         // shut down
-        ds.setCreateDatabase(false);
-        ds.setShutdownDatabase(true);
+        ds.setCreate(false);
+        ds.setShutdown(true);
         try {
             cf.getConnection(ds);
             fail();
@@ -98,7 +98,7 @@ public class EmbeddedConnectionFactoryTest extends TestCase {
     protected void tearDown() throws Exception {
         // shutdown server
         ds = new DerbyDataSource();
-        ds.setShutdownDatabase(true);
+        ds.setShutdown(true);
         try {
             cf.getConnection(ds);
         } catch (SQLException e) {

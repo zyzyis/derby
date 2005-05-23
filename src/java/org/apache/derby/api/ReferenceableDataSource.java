@@ -19,6 +19,8 @@ package org.apache.derby.api;
 import javax.naming.NamingException;
 import javax.naming.Reference;
 import javax.naming.Referenceable;
+import javax.naming.RefAddr;
+import javax.naming.StringRefAddr;
 
 /**
  * Specialization of DerbyDataSource that can be bound to JNDI as a Reference. This is intended for use by application
@@ -31,7 +33,8 @@ import javax.naming.Referenceable;
  * @version $Rev$ $Date$
  */
 public class ReferenceableDataSource extends DerbyDataSource implements Referenceable {
-    public Reference getReference() throws NamingException {
-        return ReferenceFactory.getReference(this);
+    public Reference getReference() {
+        RefAddr addr = new StringRefAddr("Derby URL", toURL());
+        return new Reference(getClass().getName(), addr);
     }
 }

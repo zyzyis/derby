@@ -48,10 +48,10 @@ public class ClientConnectionFactory implements ConnectionFactory {
         cds.setUser(ds.getUser());
         cds.setPassword(ds.getPassword());
         StringBuffer attrs = new StringBuffer();
-        if (ds.getCreateDatabase()) {
+        if (ds.getCreate()) {
             attrs.append(";create=true");
         }
-        if (ds.getShutdownDatabase()) {
+        if (ds.getShutdown()) {
             attrs.append(";shutdown=true");
         }
         cds.setConnectionAttributes(attrs.toString());

@@ -17,28 +17,21 @@
 package org.apache.derby.api;
 
 import java.sql.SQLException;
-import javax.naming.NamingException;
-import javax.naming.Reference;
-import javax.naming.Referenceable;
 import javax.sql.ConnectionPoolDataSource;
 import javax.sql.PooledConnection;
 
 /**
  * Implementation of a DataSource supporting pooled connections. This is intended for use by connection pooling
- * middleware rather than end user applications. As such, we assume that javax.naming is available.
+ * middleware rather than end user applications.
  *
  * @version $Rev$ $Date$
  */
-public class PooledDataSource extends BasicDataSource implements ConnectionPoolDataSource, Referenceable {
+public class PooledDataSource extends BasicDataSource implements ConnectionPoolDataSource {
     public PooledConnection getPooledConnection() throws SQLException {
         throw new UnsupportedOperationException();
     }
 
     public PooledConnection getPooledConnection(String user, String password) throws SQLException {
         throw new UnsupportedOperationException();
-    }
-
-    public Reference getReference() throws NamingException {
-        return ReferenceFactory.getReference(this);
     }
 }

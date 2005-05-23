@@ -22,6 +22,11 @@ import java.sql.DriverManager;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+import org.apache.derby.jdbc.InternalDriver;
 
 /**
  * Implementation of legacy JDBC Driver.
@@ -29,6 +34,8 @@ import java.util.Properties;
  * @version $Rev$ $Date$
  */
 public class DerbyDriver implements Driver {
+    private static final String SQLJ_INTERNAL = "jdbc:default:connection";
+
     static {
         DerbyDriver driver = new DerbyDriver();
         try {
@@ -39,21 +46,34 @@ public class DerbyDriver implements Driver {
     }
 
     public boolean acceptsURL(String url) throws SQLException {
-        return url.startsWith("jdbc:derby:") || url.equals("jdbc:default:connection");
+        if (url == null) {
+            return false;
+        }
+        return url.startsWith("jdbc:derby:") || url.equals(SQLJ_INTERNAL);
     }
 
     public Connection connect(String url, Properties info) throws SQLException {
+        if (SQLJ_INTERNAL.equals(url)) {
+            InternalDriver driver = InternalDriver.activeDriver();
+            if (driver == null) {
+                // database is not booted yet
+                return null;
+            }
+            return driver.connect(url, info);
+        }
+
         DriverDataSource ds = new DriverDataSource();
-        // decompose url and properties to initialize the DriverDataSource
+        ds.loadProperties(info);
+        ds.loadURL(url);
         return ds.getConnection();
     }
 
     public int getMajorVersion() {
-        throw new UnsupportedOperationException();
+        return 10; // todo get from properties file
     }
 
     public int getMinorVersion() {
-        throw new UnsupportedOperationException();
+        return 1; // todo get from properties file
     }
 
     public boolean jdbcCompliant() {

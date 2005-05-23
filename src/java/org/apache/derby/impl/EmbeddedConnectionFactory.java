@@ -42,8 +42,8 @@ public class EmbeddedConnectionFactory implements ConnectionFactory {
         eds.setDatabaseName(ds.getDatabaseName());
         eds.setUser(ds.getUser());
         eds.setPassword(ds.getPassword());
-        eds.setCreateDatabase(ds.getCreateDatabase() ? "create" : null);
-        eds.setShutdownDatabase(ds.getShutdownDatabase() ? "shutdown" : null);
+        eds.setCreateDatabase(ds.getCreate() ? "create" : null);
+        eds.setShutdownDatabase(ds.getShutdown() ? "shutdown" : null);
 
         eds.setLoginTimeout(ds.getLoginTimeout());
         eds.setLogWriter(ds.getLogWriter());
