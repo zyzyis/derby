@@ -32,9 +32,15 @@
 
     <currentVersion>10.1.0.SNAPSHOT</currentVersion>
 
+    <dependencies>
+        <dependency>
+            <groupId>derby</groupId>
+            <artifactId>derby-all</artifactId>
+            <version>10.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
     <build>
         <sourceDirectory>${basedir}/src/java</sourceDirectory>
-        <unitTestSourceDirectory>${basedir}/src/test</unitTestSourceDirectory>
         <resources>
             <resource>
                 <directory>${basedir}/src/java</directory>
@@ -43,5 +49,12 @@
                 </includes>
             </resource>
         </resources>
+
+        <unitTestSourceDirectory>${basedir}/src/test</unitTestSourceDirectory>
+        <unitTest>
+            <includes>
+                <include>**/*Test.java</include>
+            </includes>
+        </unitTest>
     </build>
 </project>

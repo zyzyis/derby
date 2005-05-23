@@ -20,8 +20,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 
-import org.apache.derby.impl.ConnectionFactory;
-
 /**
  * Main implementation of DataSource intended for use by end user applications.
  * <p/>
@@ -32,10 +30,10 @@ import org.apache.derby.impl.ConnectionFactory;
  */
 public class DerbyDataSource extends BasicDataSource implements DataSource {
     public Connection getConnection() throws SQLException {
-        return ConnectionFactory.getInstance().getConnection(this);
+        return newConnectionFactory().getConnection(this);
     }
 
     public Connection getConnection(String username, String password) throws SQLException {
-        return ConnectionFactory.getInstance().getConnection(this, username, password);
+        return newConnectionFactory().getConnection(this, username, password);
     }
 }

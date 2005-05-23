@@ -57,7 +57,7 @@ public class DerbyDriver implements Driver {
     }
 
     public boolean jdbcCompliant() {
-        throw new UnsupportedOperationException();
+        return true;
     }
 
     public DriverPropertyInfo[] getPropertyInfo(String url, Properties info) throws SQLException {
@@ -70,7 +70,7 @@ public class DerbyDriver implements Driver {
      */
     private static class DriverDataSource extends BasicDataSource {
         private Connection getConnection() throws SQLException {
-            throw new UnsupportedOperationException();
+            return newConnectionFactory().getConnection(this);
         }
     }
 }
