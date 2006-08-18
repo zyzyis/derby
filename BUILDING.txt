@@ -132,7 +132,6 @@ Notes:
     and JDK 14 (1.4.x), and other versions of Ant 1.6 (1.6.x).
 
 
-
 2.2.1 Download and install Apache Ant 1.6.3 or higher
 
 (1) Download a binary distribution of Ant 1.6.x from:
