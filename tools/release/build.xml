@@ -106,7 +106,9 @@
       <zipfileset dir="${basedir}/javadoc/publishedapi" prefix="${derby.bin}/javadoc" includes="**"/>   
       <!-- lib -->
       <zipfileset dir="${basedir}/jars/insane" prefix="${derby.bin}/lib" includes="derby*.*"
-	              excludes="derby_core_plugin*"/>
+	          excludes="derby_core_plugin*,derbyTesting.jar"/>
+      <!-- test -->
+      <zipfileset dir="${basedir}/jars/insane" prefix="${derby.bin}/test" includes="derbyTesting.jar"/>
       <zipfileset dir="${basedir}/java/testing" prefix="${derby.bin}/test" 
                   includes="README.htm"/>
       <zipfileset dir="${basedir}/tools/java" prefix="${derby.bin}/test" 
@@ -151,7 +153,9 @@
       <tarfileset dir="${basedir}/javadoc/publishedapi" prefix="${derby.bin}/javadoc" includes="**"/>   
       <!-- lib -->
       <tarfileset dir="${basedir}/jars/insane" prefix="${derby.bin}/lib" includes="derby*.*"
-	              excludes="derby_core_plugin*"/>
+	              excludes="derby_core_plugin*,derbyTesting.jar"/>
+      <!-- test -->
+      <tarfileset dir="${basedir}/jars/insane" prefix="${derby.bin}/test" includes="derbyTesting.jar"/>
       <tarfileset dir="${basedir}/java/testing" prefix="${derby.bin}/test" 
                   includes="README.htm"/>
       <tarfileset dir="${basedir}/tools/java" prefix="${derby.bin}/test" 
@@ -167,7 +171,8 @@
       <zipfileset dir="${crlf.dir}" includes="CHANGES,COPYRIGHT,LICENSE,KEYS,NOTICE"
       			  prefix="${derby.lib}/"/>
       <zipfileset dir="${basedir}/jars/insane" prefix="${derby.lib}/lib" includes="derby*.*"
-	              excludes="derby_core_plugin*"/>
+	              excludes="derby_core_plugin*,derbyTesting.jar"/>
+      <zipfileset dir="${basedir}/jars/insane" prefix="${derby.bin}/test" includes="derbyTesting.jar"/>
       <zipfileset dir="${basedir}/java/testing" prefix="${derby.bin}/test" 
                   includes="README.htm"/>
       <zipfileset dir="${basedir}/tools/java" prefix="${derby.bin}/test" 
@@ -180,7 +185,8 @@
       <tarfileset dir="${lf.dir}" includes="CHANGES,COPYRIGHT,LICENSE,KEYS,NOTICE"
       			  prefix="${derby.lib}/"/>
       <tarfileset dir="${basedir}/jars/insane" prefix="${derby.lib}/lib" includes="derby*.*"
-	              excludes="derby_core_plugin*"/>
+	              excludes="derby_core_plugin*,derbyTesting.jar"/>
+      <tarfileset dir="${basedir}/jars/insane" prefix="${derby.bin}/test" includes="derbyTesting.jar"/>
       <tarfileset dir="${basedir}/java/testing" prefix="${derby.bin}/test" 
                   includes="README.htm"/>
       <tarfileset dir="${basedir}/tools/java" prefix="${derby.bin}/test" 
@@ -196,7 +202,8 @@
       <zipfileset dir="${crlf.dir}" includes="CHANGES,COPYRIGHT,LICENSE,KEYS,NOTICE"
       			  prefix="${derby.lib-debug}/"/>
       <zipfileset dir="${basedir}/jars/sane" prefix="${derby.lib-debug}/lib" includes="derby*.*"
-	              excludes="derby_core_plugin*"/>
+	              excludes="derby_core_plugin*,derbyTesting.jar"/>
+      <zipfileset dir="${basedir}/jars/sane" prefix="${derby.bin}/test" includes="derbyTesting.jar"/>
       <zipfileset dir="${basedir}/java/testing" prefix="${derby.bin}/test" 
                   includes="README.htm"/>
       <zipfileset dir="${basedir}/tools/java" prefix="${derby.bin}/test" 
@@ -209,7 +216,8 @@
       <tarfileset dir="${lf.dir}" includes="CHANGES,COPYRIGHT,LICENSE,KEYS,NOTICE"
       			  prefix="${derby.lib-debug}/"/>
       <tarfileset dir="${basedir}/jars/sane" prefix="${derby.lib-debug}/lib" includes="derby*.*"
-	              excludes="derby_core_plugin*"/>
+	              excludes="derby_core_plugin*,derbyTesting.jar"/>
+      <tarfileset dir="${basedir}/jars/sane" prefix="${derby.bin}/test" includes="derbyTesting.jar"/>
       <tarfileset dir="${basedir}/java/testing" prefix="${derby.bin}/test" 
                   includes="README.htm"/>
       <tarfileset dir="${basedir}/tools/java" prefix="${derby.bin}/test" 
