@@ -21,9 +21,9 @@
 package org.apache.derbyTesting.functionTests.tests.derbynet;
 
 import java.util.Properties;
-import org.apache.derbyTesting.functionTests.util.BaseTestCase;
 import org.apache.derbyTesting.functionTests.util.TestUtil;
-import org.apache.derbyTesting.functionTests.util.BaseJDBCTestCase;
+import org.apache.derbyTesting.junit.BaseJDBCTestCase;
+import org.apache.derbyTesting.junit.BaseTestCase;
 import org.apache.derby.drda.NetworkServerControl;
 
 import junit.framework.*;
@@ -40,7 +40,7 @@ import java.security.AccessController;
  * started from the command line and that it will not shut down the databases
  * when started from the API.
  */
-public class ShutDownDBWhenNSShutsDownTest extends BaseTestCase {
+public class ShutDownDBWhenNSShutsDownTest extends BaseJDBCTestCase {
 
 
     NetworkServerControl server = null;
@@ -144,13 +144,14 @@ public class ShutDownDBWhenNSShutsDownTest extends BaseTestCase {
     }
 
     private void createDatabase() throws SQLException {
-        Connection conn = BaseJDBCTestCase.getConnection();
+        Connection conn = getXConnection();
         conn.setAutoCommit(false);
         Statement st = conn.createStatement();
         st.execute("CREATE TABLE T1 (a int)");
         st.execute("INSERT INTO T1 VALUES (1), (2), (3), (4), (5)");
         st.execute("DROP TABLE T1");
         conn.commit();
+        conn.close();
     }
 
     private void shutdownServer() throws Exception {

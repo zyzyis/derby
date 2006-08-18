@@ -18,8 +18,10 @@
  * language governing permissions and limitations under the License.
  */
 package org.apache.derbyTesting.functionTests.tests.jdbcapi;
-import org.apache.derbyTesting.functionTests.util.BaseJDBCTestCase;
 import org.apache.derbyTesting.functionTests.util.TestInputStream;
+import org.apache.derbyTesting.junit.BaseJDBCTestCase;
+import org.apache.derbyTesting.junit.BaseJDBCTestSetup;
+
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import java.sql.Connection;
@@ -37,7 +39,7 @@ import java.io.InputStream;
  *
  * @author Andreas Korneliussen
  */
-final public class BLOBDataModelSetup extends TestSetup
+final public class BLOBDataModelSetup extends BaseJDBCTestSetup
 {
     
     /** 
@@ -57,7 +59,7 @@ final public class BLOBDataModelSetup extends TestSetup
     protected final void setUp() 
         throws Exception
     {
-        con = BaseJDBCTestCase.getConnection();
+        Connection con = getConnection();
         con.setAutoCommit(false);
         
         // Create table:
@@ -106,14 +108,16 @@ final public class BLOBDataModelSetup extends TestSetup
         throws Exception
     {
         try { 
+            Connection con = getConnection();
             Statement statement = con.createStatement();
             statement.execute("DROP TABLE " + tableName);
             statement.close();
             con.commit();
-            con.close();
         } catch (SQLException e) {
             BaseJDBCTestCase.printStackTrace(e);
-        }      
+        }  
+        
+        super.tearDown();
     }
 
     /**
@@ -136,9 +140,6 @@ final public class BLOBDataModelSetup extends TestSetup
     
     /** Val for big  record */
     final static int bigVal = regularBlobs + 1;
-    
-    /** JDBC Connection */        
-    private Connection con;
     
     /** Name of table */
     private static final String tableName = "TESTBLOBTABLE";

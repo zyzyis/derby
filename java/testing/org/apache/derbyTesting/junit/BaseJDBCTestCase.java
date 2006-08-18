@@ -17,12 +17,13 @@
  * either express or implied. See the License for the specific 
  * language governing permissions and limitations under the License.
  */
-package org.apache.derbyTesting.functionTests.util;
+package org.apache.derbyTesting.junit;
 
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.sql.*;
+
 
 /**
  * Base class for JDBC JUnit tests.
@@ -33,6 +34,14 @@ public abstract class BaseJDBCTestCase
     extends BaseTestCase {
 
     /**
+     * Maintain a single connection to the default
+     * database, opened at the first call to getConnection.
+     * Typical setup will just require a single connection.
+     * @see BaseJDBCTestSetup#getConnection()
+     */
+    private Connection conn;
+    
+    /**
      * Create a test case with the given name.
      *
      * @param name of the test case.
@@ -40,21 +49,136 @@ public abstract class BaseJDBCTestCase
     public BaseJDBCTestCase(String name) {
         super(name);
     }
+    
+    /**
+     * Obtain the connection to the default database.
+     * This class maintains a single connection returned
+     * by this class, it is opened on the first call to
+     * this method. Subsequent calls will return the same
+     * connection object unless it has been closed. In that
+     * case a new connection object will be returned.
+     * <P>
+     * The tearDown method will close the connection if
+     * it is open.
+     * @see TestConfiguration#openDefaultConnection()
+     */
+    // TEMP NAME - WILL BE getConnection() once all uses of the
+    // static getConnection() have been converted to openDefaultConnection
+    public Connection getXConnection() throws SQLException
+    {
+        if (conn != null)
+        {
+            if (!conn.isClosed())
+                return conn;
+            conn = null;
+        }
+        conn = getTestConfiguration().openDefaultConnection();
+        initializeConnection(conn);
+        return conn;
+    }
+    
+    /**
+     * Allow a sub-class to initialize a connection to provide
+     * consistent connection state for its tests. Called only
+     * when getConnection() opens a new connection. Default
+     * action is to not modify the connection's state from
+     * the initialization provided by the data source.
+     * @param conn Connection to be intialized
+     * @throws SQLException Error setting the initial state.
+     */
+    protected void initializeConnection(Connection conn) throws SQLException
+    {
+    }
+    
+    /**
+     * Utility method to create a Statement using the connection
+     * returned by getConnection.
+     * @return Statement object from getConnection.createStatement()
+     * @throws SQLException
+     */
+    public Statement createStatement() throws SQLException
+    {
+        return getXConnection().createStatement();
+    }
 
     /**
-     * Get connection to the default database.
+     * Utility method to create a Statement using the connection
+     * returned by getConnection.
+     * @return Statement object from
+     * getConnection.createStatement(resultSetType, resultSetConcurrency)
+     * @throws SQLException
+     */
+    public Statement createStatement(int resultSetType,
+            int resultSetConcurrency) throws SQLException
+    {
+        return getXConnection().createStatement(resultSetType, resultSetConcurrency);
+    }
+    /**
+     * Utility method to create a PreparedStatement using the connection
+     * returned by getConnection.
+     * @return Statement object from
+     * getConnection.createStatement(resultSetType, resultSetConcurrency)
+     * @throws SQLException
+     */
+    public PreparedStatement prepareStatement(String sql) throws SQLException
+    {
+        return getXConnection().prepareStatement(sql);
+    }    
+    
+    /**
+     * Utility method to commit using the connection
+     * returned by getConnection.
+     * @throws SQLException
+     */
+    public void commit() throws SQLException
+    {
+        getXConnection().commit();
+    }  
+    /**
+     * Utility method to rollback using the connection
+     * returned by getConnection.
+     * @throws SQLException
+     */
+    public void rollback() throws SQLException
+    {
+        getXConnection().rollback();
+    } 
+    /**
+     * Tear down this fixture, sub-classes should call
+     * super.tearDown(). This cleanups & closes the connection
+     * if it is open.
+     */
+    protected void tearDown()
+    throws java.lang.Exception
+    {
+        JDBC.cleanup(conn);
+        conn = null;
+    }
+
+    // TEMP
+    public static Connection getConnection() throws SQLException
+    {
+        return openDefaultConnection();
+    }
+
+    /**
+     * Open a connection to the default database.
      * If the database does not exist, it will be created.
      * A default username and password will be used for the connection.
      *
      * @return connection to default database.
+     * @see TestConfiguration#openDefaultConnection()
      */
-    public static Connection getConnection()
+    public static Connection openDefaultConnection()
         throws SQLException {
-        return CONFIG.getDefaultConnection();
+        return CONFIG.openDefaultConnection();
     }
     
-
-   
+    public Connection openConnection(String databaseName) throws SQLException
+    {
+        return getTestConfiguration().openConnection(databaseName);
+    }
+    
     /**
      * Tell if the client is embedded.
      *

@@ -19,9 +19,10 @@
  */
 package org.apache.derbyTesting.functionTests.tests.jdbcapi;
 
-import org.apache.derbyTesting.functionTests.util.BaseJDBCTestCase;
-import org.apache.derbyTesting.functionTests.util.JDBC;
 import org.apache.derbyTesting.functionTests.util.SQLStateConstants;
+import org.apache.derbyTesting.junit.BaseJDBCTestCase;
+import org.apache.derbyTesting.junit.JDBC;
+
 import junit.framework.*;
 
 import java.sql.*;
@@ -64,7 +65,7 @@ public class ScrollResultSetTest extends BaseJDBCTestCase {
      * Set up the connection to the database.
      */
     public void setUp() throws  Exception {       
-        con = getConnection();
+        Connection con = getXConnection();
         con.setAutoCommit(true);
 
         String createTableWithPK = "CREATE TABLE tableWithPK (" +
@@ -76,6 +77,7 @@ public class ScrollResultSetTest extends BaseJDBCTestCase {
         stmt.execute(createTableWithPK);
         
         stmt.execute(insertData);
+        stmt.close();
     }
     
     /**
@@ -83,13 +85,16 @@ public class ScrollResultSetTest extends BaseJDBCTestCase {
      */
     public void tearDown() throws Exception {
         println("TearDown");
+        Statement s = getXConnection().createStatement();
         try { 
-            con.createStatement().executeUpdate("DROP TABLE tableWithPK");
-            con.commit();
-            con.close();
-        } catch (SQLException e) {
+            
+            s.executeUpdate("DROP TABLE tableWithPK");
+         } catch (SQLException e) {
             printStackTrace(e);
-        }      
+        }    
+        s.close();
+        super.tearDown();
+
     }
     
     /**
@@ -98,6 +103,7 @@ public class ScrollResultSetTest extends BaseJDBCTestCase {
      */
     public void testNextOnLastRowForwardOnly()  throws SQLException{
 
+        Connection con = getXConnection();
         con.setAutoCommit(true);
         con.setHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
         Statement roStmt = con.createStatement(
@@ -130,6 +136,7 @@ public class ScrollResultSetTest extends BaseJDBCTestCase {
      */
     public void testNextOnLastRowScrollable()  throws SQLException{
 
+        Connection con = getXConnection();
         con.setAutoCommit(true);
         con.setHoldability(ResultSet.CLOSE_CURSORS_AT_COMMIT);
         Statement roStmt = con.createStatement(
@@ -149,8 +156,5 @@ public class ScrollResultSetTest extends BaseJDBCTestCase {
         rs.close();
 
     }
-
-    /* Connection established in setUp() */
-    protected Connection con = null;
        
 }

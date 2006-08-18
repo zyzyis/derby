@@ -19,7 +19,9 @@
  */
 package org.apache.derbyTesting.functionTests.tests.jdbcapi;
 import org.apache.derbyTesting.functionTests.util.TestUtil;
-import org.apache.derbyTesting.functionTests.util.BaseJDBCTestCase;
+import org.apache.derbyTesting.junit.BaseJDBCTestCase;
+import org.apache.derbyTesting.junit.JDBC;
+
 import junit.framework.*;
 import java.sql.*;
 
@@ -42,7 +44,7 @@ public class URCoveringIndexTest extends BaseJDBCTestCase {
      * Set up the connection to the database.
      */
     public void setUp() throws  Exception {       
-        con = getConnection();
+        Connection con = getXConnection();
         con.setAutoCommit(false);
 
         String createTableWithPK = "CREATE TABLE tableWithPK (" +
@@ -53,19 +55,8 @@ public class URCoveringIndexTest extends BaseJDBCTestCase {
         stmt.execute(createTableWithPK);
         
         stmt.execute(insertData);
-    }
-    
-    /**
-     * Rollback the transaction
-     */
-    public void tearDown() throws Exception {
-        println("TearDown");
-        try { 
-            con.rollback();
-            con.close();
-        } catch (SQLException e) {
-            printStackTrace(e);
-        }      
+        
+        stmt.close();
     }
     
     private void testUpdateUpdatedTupleWithCoveringIndex(
@@ -75,6 +66,8 @@ public class URCoveringIndexTest extends BaseJDBCTestCase {
         SQLWarning w = null;
         int resultsetType = scroll ? ResultSet.TYPE_SCROLL_INSENSITIVE :
                 ResultSet.TYPE_FORWARD_ONLY;
+        
+        Connection con = getXConnection();
         
         if (!(con.getMetaData().supportsResultSetConcurrency(resultsetType,
                 ResultSet.CONCUR_UPDATABLE))) {
@@ -146,8 +139,4 @@ public class URCoveringIndexTest extends BaseJDBCTestCase {
     public void testUpdateUpdatedTupleFOUpdateRow()  throws SQLException{
         testUpdateUpdatedTupleWithCoveringIndex(false, false);
     }
-
-
-    protected Connection con = null; // Connection established in setUp()
-       
 }

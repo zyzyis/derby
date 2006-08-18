@@ -19,17 +19,18 @@
        specific language governing permissions and limitations
        under the License
 */
-package org.apache.derbyTesting.functionTests.tests.jdbcapi;
+package org.apache.derbyTesting.functionTests.tests.jdbc4;
+
+import java.sql.SQLException;
 
 import org.apache.derbyTesting.junit.BaseTestCase;
-import org.apache.derbyTesting.junit.JDBC;
 
 import junit.framework.Test; 
 import junit.framework.TestSuite;
 
 /**
  * Suite to run all JUnit tests in this package:
- * org.apache.derbyTesting.functionTests.tests.jdbcapi
+ * org.apache.derbyTesting.functionTests.tests.jdbc4
  *
  */
 public class _Suite extends BaseTestCase  {
@@ -41,28 +42,30 @@ public class _Suite extends BaseTestCase  {
 		super(name);
 	}
 
-	public static Test suite() {
+	public static Test suite() throws SQLException {
 
-		TestSuite suite = new TestSuite("jdbcapi");
+		TestSuite suite = new TestSuite();
 
-		suite.addTest(ConcurrencyTest.suite());
-		suite.addTest(HoldabilityTest.suite());
-		suite.addTest(ProcedureTest.suite());
-		suite.addTest(SURQueryMixTest.suite());
-		suite.addTest(SURTest.suite());
-		suite.addTest(UpdateXXXTest.suite());
-		suite.addTestSuite(URCoveringIndexTest.class);
-        suite.addTest(ResultSetCloseTest.suite());
-        suite.addTest(DataSourcePropertiesTest.suite());
+		//suite.addTestSuite(AutoloadBooting.class);
+		//suite.addTestSuite(AutoloadTest.class);
+		suite.addTest(BlobTest.suite());
+		suite.addTest(CallableStatementTest.suite());
+		suite.addTest(ClobTest.suite());
+		suite.addTest(ClosedObjectTest.suite());
+		suite.addTest(ConnectionTest.suite());
+		suite.addTest(DataSourceTest.suite());
+		suite.addTestSuite(JDBC40TranslationTest.class);	
+		suite.addTest(ParameterMetaDataWrapperTest.suite());
+		suite.addTest(PreparedStatementTest.suite());
+		suite.addTest(ResultSetMetaDataTest.suite());
+		suite.addTest(ResultSetTest.suite());
+		suite.addTest(RowIdNotImplementedTest.suite());
+		suite.addTest(StatementEventsTest.suite());
+		suite.addTest(StatementTest.suite());
+		suite.addTestSuite(UnsupportedVetter.class);
+		suite.addTest(VerifySignatures.suite());
+		suite.addTest(XA40Test.suite());
 		
-		// Tests that are compiled using 1.4 target need to
-		// be added this way, otherwise creating the suite
-		// will throw an invalid class version error
-		if (JDBC.vmSupportsJDBC3() || JDBC.vmSupportsJSR169())
-		{
-			suite.addTest(ScrollResultSetTest.suite());
-		}
-
 		return suite;
 	}
 }

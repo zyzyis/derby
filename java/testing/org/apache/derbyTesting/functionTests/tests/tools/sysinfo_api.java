@@ -30,7 +30,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import org.apache.derby.tools.sysinfo;
-import org.apache.derbyTesting.functionTests.util.BaseJDBCTestCase;
+import org.apache.derbyTesting.junit.BaseJDBCTestCase;
 
 /**
  *  Test all the static public methods of the sysinfo class.
@@ -38,7 +38,6 @@ import org.apache.derbyTesting.functionTests.util.BaseJDBCTestCase;
 
 public class sysinfo_api extends BaseJDBCTestCase {
 
-    Connection c;
     DatabaseMetaData dm;
 
     public sysinfo_api(String name) { 
@@ -139,13 +138,9 @@ public class sysinfo_api extends BaseJDBCTestCase {
      *              with sysinfo
      */
     public void setUp() throws SQLException {
-        c = getConnection();
-        dm = c.getMetaData();
+        dm = getXConnection().getMetaData();
     }
 
-    public void tearDown() throws SQLException {
-        c.close();
-    }
 
 }
 

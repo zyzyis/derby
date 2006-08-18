@@ -18,7 +18,9 @@
  * language governing permissions and limitations under the License.
  */
 package org.apache.derbyTesting.functionTests.tests.jdbcapi;
-import org.apache.derbyTesting.functionTests.util.BaseJDBCTestCase;
+import org.apache.derbyTesting.junit.BaseJDBCTestCase;
+import org.apache.derbyTesting.junit.JDBC;
+
 import junit.framework.*;
 import java.sql.*;
 
@@ -46,6 +48,16 @@ abstract public class SURBaseTest extends BaseJDBCTestCase {
     }
     
     /**
+     * Override the default connection's to ensure it
+     * is always in autocommit false and repeatable
+     * read as a starting point.
+     */
+    protected void initializeConnection(Connection conn) throws SQLException {
+        conn.setAutoCommit(false);
+        conn.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);   
+    }
+    
+    /**
      * Get a JDBC Connection to the Derby database.
      * The autocommit flag is set to false, and the isolation level
      * for the transactions is set to repeatable read.
@@ -53,10 +65,9 @@ abstract public class SURBaseTest extends BaseJDBCTestCase {
     protected Connection getNewConnection() 
         throws SQLException
     {
-        final Connection rcon = getConnection();
-        rcon.setAutoCommit(false);
-        rcon.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
-        return rcon;
+        final Connection rcon = openDefaultConnection();
+        initializeConnection(rcon);
+       return rcon;
     }
 
     /**
@@ -64,20 +75,9 @@ abstract public class SURBaseTest extends BaseJDBCTestCase {
      */
     public void setUp() throws  Exception {       
         println("SetUp");
-        con = getNewConnection();
-    }
-    
-    /**
-     * Rollback the transaction
-     */
-    public void tearDown() throws Exception {
-        println("TearDown");
-        try { 
-            con.rollback();
-            con.close();
-        } catch (SQLException e) {
-            printStackTrace(e);
-        }      
+        // temp save the connection in this class as con
+        // as well as the default connection in the parent
+        con = getXConnection();
     }
     
     /**
@@ -100,8 +100,8 @@ abstract public class SURBaseTest extends BaseJDBCTestCase {
      * updateRow()
      */
     protected void updateTuple(ResultSet rs) throws SQLException {
-        assertTrue("Cannot use updateRow() in autocommit mode", 
-                   !con.getAutoCommit());
+        assertFalse("Cannot use updateRow() in autocommit mode", 
+                   rs.getStatement().getConnection().getAutoCommit());
         int id = rs.getInt(1);
         int a = rs.getInt(2);
         int b = rs.getInt(3);        
@@ -122,7 +122,7 @@ abstract public class SURBaseTest extends BaseJDBCTestCase {
         int b = rs.getInt(3);        
         int newA = a*2 +id + 37;
         int newB = newA + id + 17;
-        PreparedStatement ps = con.
+        PreparedStatement ps = 
             prepareStatement("update T1 set a=?,b=? where current of " +
                              rs.getCursorName());
         ps.setInt(1, newA);

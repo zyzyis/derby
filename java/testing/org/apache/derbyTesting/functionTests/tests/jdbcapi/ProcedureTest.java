@@ -29,17 +29,15 @@ import java.sql.Statement;
 import junit.extensions.TestSetup;
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import org.apache.derbyTesting.functionTests.util.BaseJDBCTestCase;
-import org.apache.derbyTesting.functionTests.util.BaseJDBCTestSetup;
-import org.apache.derbyTesting.functionTests.util.JDBC;
+import org.apache.derbyTesting.junit.BaseJDBCTestCase;
+import org.apache.derbyTesting.junit.BaseJDBCTestSetup;
+import org.apache.derbyTesting.junit.CleanDatabaseTestSetup;
+import org.apache.derbyTesting.junit.JDBC;
 
 /**
  * Tests of stored procedures.
  */
 public class ProcedureTest extends BaseJDBCTestCase {
-
-    /** Connection used by the test cases. Auto-commit is turned off. */
-    private Connection conn;
 
     /**
      * Creates a new <code>ProcedureTest</code> instance.
@@ -58,7 +56,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
      * @exception SQLException if a database error occurs
      */
     public void testExecuteQueryWithNoDynamicResultSets() throws SQLException {
-        Statement stmt = conn.createStatement();
+        Statement stmt = createStatement();
         try {
             stmt.executeQuery("CALL RETRIEVE_DYNAMIC_RESULTS(0)");
             fail("executeQuery() didn't fail.");
@@ -74,7 +72,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
      * @exception SQLException if a database error occurs
      */
     public void testExecuteQueryWithOneDynamicResultSet() throws SQLException {
-        Statement stmt = conn.createStatement();
+        Statement stmt = createStatement();
         ResultSet rs = stmt.executeQuery("CALL RETRIEVE_DYNAMIC_RESULTS(1)");
         assertNotNull("executeQuery() returned null.", rs);
         assertTrue("Result set has no data.", rs.next());
@@ -90,7 +88,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
     public void testExecuteQueryWithMoreThanOneDynamicResultSet()
         throws SQLException
     {
-        Statement stmt = conn.createStatement();
+        Statement stmt = createStatement();
         try {
             stmt.executeQuery("CALL RETRIEVE_DYNAMIC_RESULTS(2)");
             fail("executeQuery() didn't fail.");
@@ -111,7 +109,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
     public void xtestExecuteUpdateWithNoDynamicResultSets()
         throws SQLException
     {
-        Statement stmt = conn.createStatement();
+        Statement stmt = getXConnection().createStatement();
         int count = stmt.executeUpdate("CALL RETRIEVE_DYNAMIC_RESULTS(0)");
         assertEquals("Wrong update count.", 0, count);
         stmt.close();
@@ -123,7 +121,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
      * @exception SQLException if a database error occurs
      */
     public void testExecuteUpdateWithOneDynamicResultSet() throws SQLException {
-        Statement stmt = conn.createStatement();
+        Statement stmt = createStatement();
         try {
             stmt.executeUpdate("CALL RETRIEVE_DYNAMIC_RESULTS(1)");
             fail("executeUpdate() didn't fail.");
@@ -142,7 +140,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
         throws SQLException
     {
         PreparedStatement ps =
-            conn.prepareStatement("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
+            getXConnection().prepareStatement("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
         ps.setInt(1, 0);
         try {
             ps.executeQuery();
@@ -163,7 +161,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
         throws SQLException
     {
         PreparedStatement ps =
-            conn.prepareStatement("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
+            getXConnection().prepareStatement("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
         ps.setInt(1, 1);
         ResultSet rs = ps.executeQuery();
         assertNotNull("executeQuery() returned null.", rs);
@@ -181,7 +179,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
         throws SQLException
     {
         PreparedStatement ps =
-            conn.prepareStatement("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
+            getXConnection().prepareStatement("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
         ps.setInt(1, 2);
         try {
             ps.executeQuery();
@@ -204,7 +202,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
         throws SQLException
     {
         PreparedStatement ps =
-            conn.prepareStatement("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
+            getXConnection().prepareStatement("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
         ps.setInt(1, 0);
         int count = ps.executeUpdate();
         assertEquals("Wrong update count.", 0, count);
@@ -226,7 +224,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
         throws SQLException
     {
         PreparedStatement ps =
-            conn.prepareStatement("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
+            getXConnection().prepareStatement("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
         ps.setInt(1, 1);
         try {
             ps.executeUpdate();
@@ -246,7 +244,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
         throws SQLException
     {
         CallableStatement cs =
-            conn.prepareCall("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
+            getXConnection().prepareCall("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
         cs.setInt(1, 0);
         try {
             cs.executeQuery();
@@ -266,7 +264,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
         throws SQLException
     {
         CallableStatement cs =
-            conn.prepareCall("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
+            getXConnection().prepareCall("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
         cs.setInt(1, 1);
         ResultSet rs = cs.executeQuery();
         assertNotNull("executeQuery() returned null.", rs);
@@ -284,7 +282,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
         throws SQLException
     {
         CallableStatement cs =
-            conn.prepareCall("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
+            getXConnection().prepareCall("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
         cs.setInt(1, 2);
         try {
             cs.executeQuery();
@@ -306,7 +304,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
         throws SQLException
     {
         CallableStatement cs =
-            conn.prepareCall("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
+            getXConnection().prepareCall("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
         cs.setInt(1, 0);
         int count = cs.executeUpdate();
         assertEquals("Wrong update count.", 0, count);
@@ -322,7 +320,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
         throws SQLException
     {
         CallableStatement cs =
-            conn.prepareCall("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
+            getXConnection().prepareCall("CALL RETRIEVE_DYNAMIC_RESULTS(?)");
         cs.setInt(1, 1);
         try {
             cs.executeUpdate();
@@ -340,10 +338,11 @@ public class ProcedureTest extends BaseJDBCTestCase {
      * @exception SQLException if a database error occurs
      */
     public void testRollbackStoredProcWithExecuteQuery() throws SQLException {
-        Statement stmt = conn.createStatement();
+
+        Statement stmt = createStatement();
         ResultSet rs = stmt.executeQuery("CALL PROC_WITH_SIDE_EFFECTS(1)");
         rs.close();
-        conn.rollback();
+        stmt.getConnection().rollback();
         ResultSet tableRs = stmt.executeQuery("SELECT * FROM SIMPLE_TABLE");
         // table should be empty after rollback
         assertFalse("Side effects from stored procedure not rolled back.",
@@ -359,9 +358,9 @@ public class ProcedureTest extends BaseJDBCTestCase {
      * @exception SQLException if a database error occurs
      */
     public void testRollbackStoredProcWithExecuteUpdate() throws SQLException {
-        Statement stmt = conn.createStatement();
+        Statement stmt = createStatement();
         stmt.executeUpdate("CALL PROC_WITH_SIDE_EFFECTS(0)");
-        conn.rollback();
+        stmt.getConnection().rollback();
         ResultSet rs = stmt.executeQuery("SELECT * FROM SIMPLE_TABLE");
         // table should be empty after rollback
         assertFalse("Side effects from stored procedure not rolled back.",
@@ -382,6 +381,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
     public void xtestRollbackStoredProcWhenExecuteQueryReturnsNothing()
         throws SQLException
     {
+        Connection conn = getXConnection();
         conn.setAutoCommit(true);
         Statement stmt = conn.createStatement();
         try {
@@ -410,6 +410,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
     public void xtestRollbackStoredProcWhenExecuteQueryReturnsTooMuch()
         throws SQLException
     {
+        Connection conn = getXConnection();
         conn.setAutoCommit(true);
         Statement stmt = conn.createStatement();
         try {
@@ -437,6 +438,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
     public void xtestRollbackStoredProcWhenExecuteUpdateReturnsResults()
         throws SQLException
     {
+        Connection conn = getXConnection();
         conn.setAutoCommit(true);
         Statement stmt = conn.createStatement();
         try {
@@ -464,6 +466,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
     public void xtestRollbackStoredProcWhenExecuteQueryReturnsNothing_prepared()
         throws SQLException
     {
+        Connection conn = getXConnection();
         conn.setAutoCommit(true);
         PreparedStatement ps =
             conn.prepareStatement("CALL PROC_WITH_SIDE_EFFECTS(?)");
@@ -496,6 +499,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
     public void xtestRollbackStoredProcWhenExecuteQueryReturnsTooMuch_prepared()
         throws SQLException
     {
+        Connection conn = getXConnection();
         conn.setAutoCommit(true);
         PreparedStatement ps =
             conn.prepareStatement("CALL PROC_WITH_SIDE_EFFECTS(?)");
@@ -528,6 +532,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
         xtestRollbackStoredProcWhenExecuteUpdateReturnsResults_prepared()
         throws SQLException
     {
+        Connection conn = getXConnection();
         conn.setAutoCommit(true);
         PreparedStatement ps =
             conn.prepareStatement("CALL PROC_WITH_SIDE_EFFECTS(?)");
@@ -555,7 +560,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
     public void testClosedDynamicResultSetsFromExecuteQuery()
         throws SQLException
     {
-        Statement stmt = conn.createStatement();
+        Statement stmt = createStatement();
         try {
             ResultSet rs = stmt.executeQuery("CALL RETRIEVE_CLOSED_RESULT()");
             fail("executeQuery() didn't fail.");
@@ -573,7 +578,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
     public void testClosedDynamicResultSetsFromExecuteUpdate()
         throws SQLException
     {
-        Statement stmt = conn.createStatement();
+        Statement stmt = createStatement();
         stmt.executeUpdate("CALL RETRIEVE_CLOSED_RESULT()");
         stmt.close();
     }
@@ -586,14 +591,19 @@ public class ProcedureTest extends BaseJDBCTestCase {
     public void testDynamicResultSetsFromOtherConnectionWithExecuteQuery()
         throws SQLException
     {
-        Statement stmt = conn.createStatement();
+        PreparedStatement ps =
+            getXConnection().prepareStatement("CALL RETRIEVE_EXTERNAL_RESULT(?,?,?)");
+        
+        ps.setString(1, getTestConfiguration().getDatabaseName());
+        ps.setString(2, getTestConfiguration().getUserName());
+        ps.setString(3, getTestConfiguration().getUserPassword());
         try {
-            ResultSet rs = stmt.executeQuery("CALL RETRIEVE_EXTERNAL_RESULT()");
+            ps.executeQuery();
             fail("executeQuery() didn't fail.");
         } catch (SQLException sqle) {
             assertNoResultSetFromExecuteQuery(sqle);
         }
-        stmt.close();
+        ps.close();
     }
 
     /**
@@ -604,9 +614,15 @@ public class ProcedureTest extends BaseJDBCTestCase {
     public void testDynamicResultSetsFromOtherConnectionWithExecuteUpdate()
         throws SQLException
     {
-        Statement stmt = conn.createStatement();
-        stmt.executeUpdate("CALL RETRIEVE_EXTERNAL_RESULT()");
-        stmt.close();
+        PreparedStatement ps =
+            getXConnection().prepareStatement("CALL RETRIEVE_EXTERNAL_RESULT(?,?,?)");
+        
+        ps.setString(1, getTestConfiguration().getDatabaseName());
+        ps.setString(2, getTestConfiguration().getUserName());
+        ps.setString(3, getTestConfiguration().getUserPassword());
+        
+        ps.executeUpdate();
+        ps.close();
     }
 
     // UTILITY METHODS
@@ -705,7 +721,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
                   "_prepared"));
         }
         }
-        return new BaseJDBCTestSetup(suite) {
+        Test test = new BaseJDBCTestSetup(suite) {
             /**
              * Creates the tables and the stored procedures used in the test
              * cases.
@@ -746,6 +762,8 @@ public class ProcedureTest extends BaseJDBCTestCase {
                 super.tearDown();
             }
         };
+        
+        return new CleanDatabaseTestSetup(test);
     }
 
     /**
@@ -754,7 +772,7 @@ public class ProcedureTest extends BaseJDBCTestCase {
      * @exception SQLException if a database error occurs
      */
     public void setUp() throws SQLException {
-        conn = getConnection();
+        Connection conn = getXConnection();
         conn.setAutoCommit(false);
         Statement s = conn.createStatement();
         for (int i = 0; i < TABLES.length; i++) {
@@ -762,15 +780,6 @@ public class ProcedureTest extends BaseJDBCTestCase {
         }
         s.close();
         conn.commit();
-    }
-
-    /**
-     * Closes the connection for a test case.
-     * @exception SQLException if a database error occurs
-     */
-    public void tearDown() throws SQLException {
-        conn.rollback();
-        conn.close();
     }
 
     /**
@@ -793,7 +802,8 @@ public class ProcedureTest extends BaseJDBCTestCase {
           "DYNAMIC RESULT SETS 1"
         },
         { "RETRIEVE_EXTERNAL_RESULT",
-          "CREATE PROCEDURE RETRIEVE_EXTERNAL_RESULT() LANGUAGE JAVA " +
+          "CREATE PROCEDURE RETRIEVE_EXTERNAL_RESULT(" +
+          "DBNAME VARCHAR(128), DBUSER VARCHAR(128), DBPWD VARCHAR(128)) LANGUAGE JAVA " +
           "PARAMETER STYLE JAVA EXTERNAL NAME '" +
           ProcedureTest.class.getName() + ".retrieveExternalResult' " +
           "DYNAMIC RESULT SETS 1"
@@ -875,11 +885,17 @@ public class ProcedureTest extends BaseJDBCTestCase {
      * @param external result set from another connection
      * @exception SQLException if a database error occurs
      */
-    public static void retrieveExternalResult(ResultSet[] external)
+    public static void retrieveExternalResult(String dbName, 
+            String user, String password, ResultSet[] external)
         throws SQLException
     {
+        // Use a server-side connection to the same database.
+        String url = "jdbc:derby:" + dbName;
+        
+        Connection conn = DriverManager.getConnection(url, user, password);
+        
         external[0] =
-            getConnection().createStatement().executeQuery("VALUES(1)");
+            conn.createStatement().executeQuery("VALUES(1)");
     }
 
     /**

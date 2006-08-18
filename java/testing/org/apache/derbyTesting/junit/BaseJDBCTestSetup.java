@@ -17,9 +17,10 @@
  * either express or implied. See the License for the specific 
  * language governing permissions and limitations under the License.
  */
-package org.apache.derbyTesting.functionTests.util;
+package org.apache.derbyTesting.junit;
 
 import java.sql.*;
+
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
@@ -60,7 +61,7 @@ public abstract class BaseJDBCTestSetup
      * <P>
      * The tearDown method will close the connection if
      * it is open.
-     * @see TestConfiguration#getDefaultConnection()
+     * @see TestConfiguration#openDefaultConnection()
      */
     public final Connection getConnection() throws SQLException
     {
@@ -70,7 +71,7 @@ public abstract class BaseJDBCTestSetup
     			return conn;
     		conn = null;
     	}
-    	return conn = getTestConfiguration().getDefaultConnection();
+    	return conn = getTestConfiguration().openDefaultConnection();
     }
     
     /**
@@ -92,5 +93,6 @@ public abstract class BaseJDBCTestSetup
     throws java.lang.Exception
     {
     	JDBC.cleanup(conn);
+        conn = null;
     }
 }

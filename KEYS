@@ -350,3 +350,80 @@ U3QMjr++rwUAn34Z5ghQZOpDmF8R/8SPMzlRx2yeAKCAnSxY7R5og/tVa29t7ih+
 tDrSVQ==
 =Rbhm
 -----END PGP PUBLIC KEY BLOCK-----
+pub   1024D/990ED4AA 2006-08-16
+uid                  Knut Anders Hatlen <kahatlen@apache.org>
+sig 3        990ED4AA 2006-08-16  Knut Anders Hatlen <kahatlen@apache.org>
+sub   2048g/165BD1F7 2006-08-16
+sig          990ED4AA 2006-08-16  Knut Anders Hatlen <kahatlen@apache.org>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.4.5 (FreeBSD)
+
+mQGiBETiuQURBADTblCPi5gXDXhT88Yp2YPAmeb5FMFyV1oPZfwsq/1cj8+BfqpY
+ZaqUcqw0l0aCHiCFOagqlvLoy9A4NAeRBgcx3Q1sfWEqSbvqy3jYS9zUpS2Fx9fb
+X6zrtLMNswK9pzkUgtdxBvBKMcjbSMMLfScAuHTnTFP/mXZapXGW1IPJqwCgmXBg
+eFsYAjeAWxIUHyv7hYeZ7wMEAMX714eZUVR+jyjcw6iDMJbhFaIVm5WVT/+Jf5Eh
+mf4IAYRkSCANX8s4jZfukUs6kptGRllwqstF7maFDRqdOGkN0unhUgvv0pTEOtXn
+0FtV2wR2dP0N0yxhOYuedishTi9OOo8llDWRUaaazKwjYIXQJIep5ViN86rvrbCE
+Y9TQA/wJKF5qoos/FPSECly18wzuCcgnTWHw3bYjQbUlOJ8HeqYS5vQI5hUHuUXA
+4hjVSMoTDbfVVhDRDML3ACd+qgIsNKVRi0mWRFAz4ZBTmrJiWqdVX36xAjeedXkD
+1vk/VMWVjpJms3EDDFo+hOWm24diefWtnDCvf0WY9s4N96ZZrLQoS251dCBBbmRl
+cnMgSGF0bGVuIDxrYWhhdGxlbkBhcGFjaGUub3JnPohgBBMRAgAgBQJE4rkFAhsD
+BgsJCAcDAgQVAggDBBYCAwECHgECF4AACgkQ4eHysJkO1KqNCgCfehVc27Q+dhwb
+IrtoTTvJDrKdD1oAnReLlobKcAIH6ToqWhc1KPyQrxfSuQINBETiuQkQCACP/g0D
+cjg+SPXowQqRKcIla0MUINusXCHxKcNRqRpcCEiSPNcBko1PpGjiVcIfP1urAkVV
+c8/Vey4l3LI00kapGOsXK//v/BJksnzWNNY5Q3lVEVwI57hVhMPMihn+4aE93mh2
+p/k2f2DldDPOEBEanrJiCmGtTWo7cX4sTPYwJwNwbUuApp+uI0QDs6dZSElA3pdj
+u+6JwZYDiBnrwv2YWBXgIeSQ3PhKjKS1MoybYj47b+jp9dBL1tvf0hBts2CaVBy3
+V/M98L32pm/OZrv+nm9BPg7utT+wsX+9XT5l6F7jjteYU4G8GXgFFyKldE+ZLAro
+BRAgVtPJ7FXmwJ/DAAMFB/48r4qpbDp4aaBVyOgSDuX5nDGIF+oXNqP76F0Wz5+1
+D8hiE7fweRLD9vr3o7u278GUI/IFQAZLulcw5khboScNv9eoli0jMnZPQxDgM4BD
+kmZVa+JNHUaALf41N5cGB6yJ+1G3KSY24VKd8aqBoiedLCsDibe/unq2CWjr4xZW
+A73nWzZ7RsrX07xH7hfUulRk2p5heJwgcyyfsazm38ugqP1jL+XW/6jm6He5MMt6
+wc2MWUkoFCL+pMh7RK6KTT1YBsrX6e/MDJznXaEyIj3+2pTsyzqlFxPG9loDsSVd
+/dig5bU9lRajodg+yupgpm9yNEStTody40UOxw96ZPXwiEkEGBECAAkFAkTiuQkC
+GwwACgkQ4eHysJkO1KqpMwCcCZj3gJnnOOEJwHPP9E8dPUndDfUAnil3o1vuzEA/
+VxFd+IhqD85ykUrt
+=Nxxr
+-----END PGP PUBLIC KEY BLOCK-----
+pub   1024D/88D83722 2006-08-16
+uid                  Andreas Korneliussen <andreas.korneliussen@broadpark.no>
+sig 3        88D83722 2006-08-16  Andreas Korneliussen <andreas.korneliussen@broadpark.no>
+uid                  Andreas Korneliussen <andreask@apache.org>
+sig 3        88D83722 2006-08-16  Andreas Korneliussen <andreas.korneliussen@broadpark.no>
+sub   2048g/F920EBC6 2006-08-16
+sig          88D83722 2006-08-16  Andreas Korneliussen <andreas.korneliussen@broadpark.no>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.4.4 (SunOS)
+
+mQGiBETi5coRBACF0SAt1faQn4+TPcQMwXtyl61X5vgKOxLDZjQ85ZVL/AWyaj54
+UnoV+5e8MqIlsp+829z5iMT2kPGdcWQWM+Ormj5tniFFg0GNw7LL9+R4mnfzFsBQ
+/ourirBUuy+r+5apRO0trs2naSBjLgGBtSxLy5U3rGzuZYh7NVSUqoZI0wCg534n
+DkZoiN7r44Cv+aGsdpODAQ8D/ijqaIXO7nn5jGl4bWGP8c7bOjOsEl+ahQkP/tgt
+YkPjz1BxAbswir2j6jIyfRDr3NtWyfuF50MwFwJkRSWh9iriZLbbH2QzG6y2bhdE
+ATVSoqK4EpeaU0K9ycEUIKo0+UpeM+97oVaFRzcGp4D2bJVJfhD7XhPwGZ1ZBC30
+FAy9A/9Mu/tNqO7lJSCc5Vb/xm75yja+DC61njaJTMRvwaU0wJQzi3FVHl1JhRYy
+CI2cXb8gtQXqwYOAInVCv+HFP29Vif6EoDQ8p8kV4uZeThtPAHaAONbgAhw8U5vF
+rm8NwkrJm9I85q35Oy2kbuPPMfn3WseWgRwYiZ2RMDZRUQmKsrQqQW5kcmVhcyBL
+b3JuZWxpdXNzZW4gPGFuZHJlYXNrQGFwYWNoZS5vcmc+iGAEExECACAFAkTi5coC
+GwMGCwkIBwMCBBUCCAMEFgIDAQIeAQIXgAAKCRDfoOnJiNg3IhE0AJ9KEg+lKnq9
+tOs0YLQjRkyOK+h4oQCgyDR2ZjZdT6zUnI5Bo0w+bzw1BDq0OEFuZHJlYXMgS29y
+bmVsaXVzc2VuIDxhbmRyZWFzLmtvcm5lbGl1c3NlbkBicm9hZHBhcmsubm8+iGAE
+ExECACAFAkTi5jkCGwMGCwkIBwMCBBUCCAMEFgIDAQIeAQIXgAAKCRDfoOnJiNg3
+ItmnAKCCw2HTX/VUGsc5tcmuewOR1LVhcACgjQKjdZ56vfu5hTG62MJB2PWVPD65
+Ag0EROLl4xAIAIFHg90B+QrOH4rCFul12kyI/CPOFdcIzTtW4fQOuUlHave/b3ez
+7sGbobjj3nexyvGIG9K4rKiXbticfkU6FfmWGFWV+6AbRM8i+qYdSnAck9qBO8+4
+TRf/qwhEh3i3YLcgrMdyRS9ifWDHSImqfllawP4dBdyhLu2g7Pz7Xs1+uaRjzi7+
+2wJ6nS7BCYY+fmt5OM44So0R/tO2r793LULw3TgxkbO9AkOoIdOg71tuCT3VFyLq
+jGxfrnZgfRNcnPLnUyRNAw2VoWVe1IGGlNG5el1w83tr4ugAKsFV+cHqW4bWdHGE
+b1dWVUv033evlrfaau+TEu/cp2LHVE1zULcAAwUH/07+M4cOCnT6l3xNuS93/mSx
+areXSwZ33t/LahT6J9fAwhtac6MDTkeTaDxcDuSTKkCdNlyPetR8jFmfZTu7oj+k
+PwqlSfQUHi1WHmk3Fs/9HuF+71P1C4K2789MSLnFsu94KQ3hTqbJRZbayDwoU4wZ
+HSQfMlnh22INf47iD3enORbLf2Lg3PWHVc3Xs/ag4hPQwDahKEvX7TZsHbt3LNud
+hMcdcTVEAX1kP5PL/zCxb3/YMM3l5m0zG35d+bW89P4D+3SWt4Oc09vLaGmMc9Zx
+hnBxiZzNcaNaoLPKN9wWu1q/y2J44zZDIv9gfW2vyJA2rinPRncN/9flHYXzo4iI
+SQQYEQIACQUCROLl4wIbDAAKCRDfoOnJiNg3In9mAJwOJiJ+8s4BSFd+u9JzW2wg
+1D3dCgCgyDPdCE3+3sl/C/VvoZ0PdhnuYAE=
+=+RoX
+-----END PGP PUBLIC KEY BLOCK-----

@@ -19,7 +19,7 @@
        specific language governing permissions and limitations
        under the License
 */
-package org.apache.derbyTesting.functionTests.tests.jdbcapi;
+package org.apache.derbyTesting.functionTests.tests.lang;
 
 import org.apache.derbyTesting.junit.BaseTestCase;
 import org.apache.derbyTesting.junit.JDBC;
@@ -29,7 +29,7 @@ import junit.framework.TestSuite;
 
 /**
  * Suite to run all JUnit tests in this package:
- * org.apache.derbyTesting.functionTests.tests.jdbcapi
+ * org.apache.derbyTesting.functionTests.tests.lang
  *
  */
 public class _Suite extends BaseTestCase  {
@@ -43,24 +43,16 @@ public class _Suite extends BaseTestCase  {
 
 	public static Test suite() {
 
-		TestSuite suite = new TestSuite("jdbcapi");
+		TestSuite suite = new TestSuite("lang");
 
-		suite.addTest(ConcurrencyTest.suite());
-		suite.addTest(HoldabilityTest.suite());
-		suite.addTest(ProcedureTest.suite());
-		suite.addTest(SURQueryMixTest.suite());
-		suite.addTest(SURTest.suite());
-		suite.addTest(UpdateXXXTest.suite());
-		suite.addTestSuite(URCoveringIndexTest.class);
-        suite.addTest(ResultSetCloseTest.suite());
-        suite.addTest(DataSourcePropertiesTest.suite());
+		// suite.addTest(PrepareExecuteDDL.suite());
+		// suite.addTest(LangScripts.suite());
 		
 		// Tests that are compiled using 1.4 target need to
 		// be added this way, otherwise creating the suite
 		// will throw an invalid class version error
 		if (JDBC.vmSupportsJDBC3() || JDBC.vmSupportsJSR169())
 		{
-			suite.addTest(ScrollResultSetTest.suite());
 		}
 
 		return suite;

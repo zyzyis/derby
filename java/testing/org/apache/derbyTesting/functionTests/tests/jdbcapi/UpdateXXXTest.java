@@ -19,8 +19,8 @@
  */
 package org.apache.derbyTesting.functionTests.tests.jdbcapi;
 
-import org.apache.derbyTesting.functionTests.util.BaseJDBCTestCase;
-import org.apache.derbyTesting.functionTests.util.JDBC;
+import org.apache.derbyTesting.junit.BaseJDBCTestCase;
+import org.apache.derbyTesting.junit.JDBC;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -57,18 +57,11 @@ final public class UpdateXXXTest extends BaseJDBCTestCase
         if (usingDerbyNet())
             return suite;
         
-        suite.addTest(new UpdateXXXTest("testUpdateShort"));
-        suite.addTest(new UpdateXXXTest("testUpdateInt"));
-        suite.addTest(new UpdateXXXTest("testUpdateLong"));
-        suite.addTest(new UpdateXXXTest("testUpdateFloat"));
-        suite.addTest(new UpdateXXXTest("testUpdateDouble"));
-        suite.addTest(new UpdateXXXTest("testUpdateNull"));
-        suite.addTest(new UpdateXXXTest("testUpdateObjectWithNull"));
-        suite.addTest(new UpdateXXXTest("testUpdateString"));
+        suite.addTestSuite(UpdateXXXTest.class);
         
         // requires java.math.BigDecimal
         if (JDBC.vmSupportsJDBC2())
-            suite.addTest(new UpdateXXXTest("testUpdateBigDecimal"));
+            suite.addTest(new UpdateXXXTest("jdbc2testUpdateBigDecimal"));
                       
         return suite;
     }
@@ -83,8 +76,9 @@ final public class UpdateXXXTest extends BaseJDBCTestCase
     public void setUp()
         throws Exception
     {
+        Connection con = getXConnection();
         try {
-            con = getConnection();
+            
             con.setAutoCommit(false);
             
             Statement stmt = con.createStatement();
@@ -128,22 +122,6 @@ final public class UpdateXXXTest extends BaseJDBCTestCase
             con.rollback();
             throw e;
         }
-    }
-
-    /**
-     * Teardown test.
-     * Rollback connection and close it.
-     * @exception Exceptions causes the test to fail with error
-     */
-    public void tearDown() 
-        throws Exception 
-    {
-        try { 
-            con.rollback();
-            con.close();
-        } catch (SQLException e) {
-            printStackTrace(e);
-        }      
     }
         
     /**
@@ -254,7 +232,7 @@ final public class UpdateXXXTest extends BaseJDBCTestCase
      * @exception SQLException database access error. Causes test to 
      *                         fail with an error.
      */
-    public void testUpdateBigDecimal() 
+    public void jdbc2testUpdateBigDecimal() 
         throws SQLException
     {
         for (int i = 1; i <= COLUMNS; i++) {
@@ -317,7 +295,7 @@ final public class UpdateXXXTest extends BaseJDBCTestCase
     {
         rs.close();
         
-        rs = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, 
+        rs = createStatement(ResultSet.TYPE_FORWARD_ONLY, 
                                  ResultSet.CONCUR_READ_ONLY).
             executeQuery(SELECT_STMT);
         
@@ -343,7 +321,7 @@ final public class UpdateXXXTest extends BaseJDBCTestCase
     {
         rs.close();
         
-        rs = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, 
+        rs = createStatement(ResultSet.TYPE_FORWARD_ONLY, 
                                  ResultSet.CONCUR_READ_ONLY).
             executeQuery(SELECT_STMT);
         
@@ -363,9 +341,6 @@ final public class UpdateXXXTest extends BaseJDBCTestCase
     
     /* Updatable ResultSet */
     private ResultSet rs = null;
-    
-    /* Connection */
-    private Connection con = null;
     
     /* Table name */
     private static final String TABLE_NAME = "MultiTypeTable";

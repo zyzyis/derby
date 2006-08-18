@@ -29,6 +29,8 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.sql.Connection;
 
+import org.apache.derbyTesting.junit.BaseJDBCTestCase;
+
 import junit.framework.Test;
 
 /**
@@ -40,11 +42,6 @@ public abstract class ScriptTestCase extends BaseJDBCTestCase {
 	
 	private final String inputEncoding;
 	private final String outputEncoding = "US-ASCII";
-	
-    /**
-     * Default connection.
-     */
-	private Connection conn;
 
 	/**
 	 * Create a ScriptTestCase to run a single test
@@ -118,7 +115,7 @@ public abstract class ScriptTestCase extends BaseJDBCTestCase {
 		
 		PrintStream printOut = new PrintStream(rawBytes);
 	
-		conn = getConnection();
+		Connection conn = getXConnection();
 		org.apache.derby.tools.ij.runScript(
 				conn,
 				sqlIn,
@@ -183,14 +180,5 @@ public abstract class ScriptTestCase extends BaseJDBCTestCase {
 			outFile.close();
 			throw t;
 		}
-	}
-	
-    /**
-     * Clean up the connection on teardown.
-     */
-	protected void tearDown() throws Exception
-	{
-		JDBC.cleanup(conn);
-        super.tearDown();
 	}
 }

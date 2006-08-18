@@ -18,8 +18,9 @@
  * language governing permissions and limitations under the License.
  */
 package org.apache.derbyTesting.functionTests.tests.jdbcapi;
-import org.apache.derbyTesting.functionTests.util.BaseJDBCTestCase;
 import org.apache.derbyTesting.functionTests.util.TestInputStream;
+import org.apache.derbyTesting.junit.BaseJDBCTestCase;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import java.sql.PreparedStatement;
@@ -44,7 +45,6 @@ final public class BLOBTest extends BaseJDBCTestCase
     public BLOBTest(String name) 
     {
         super(name);
-        con = null;
     }
 
     
@@ -58,7 +58,7 @@ final public class BLOBTest extends BaseJDBCTestCase
         throws SQLException, IOException
     {
         final Statement stmt = 
-            con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+            createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                                 ResultSet.CONCUR_UPDATABLE);
         final ResultSet rs = 
             stmt.executeQuery("SELECT * from " + 
@@ -74,6 +74,7 @@ final public class BLOBTest extends BaseJDBCTestCase
         verifyBlob(newVal, newSize, rs.getBlob(3));
         
         rs.close();
+        stmt.close();
     }
 
     /**
@@ -86,7 +87,7 @@ final public class BLOBTest extends BaseJDBCTestCase
         throws SQLException, IOException
     {
         final Statement stmt = 
-            con.createStatement(ResultSet.TYPE_FORWARD_ONLY,
+            createStatement(ResultSet.TYPE_FORWARD_ONLY,
                                 ResultSet.CONCUR_UPDATABLE);
         final ResultSet rs = 
             stmt.executeQuery("SELECT * from " + 
@@ -103,6 +104,7 @@ final public class BLOBTest extends BaseJDBCTestCase
         testUpdateBlobWithResultSetMethods(rs, newVal, newSize);
         
         rs.close();
+        stmt.close();
     }
 
     /**
@@ -115,7 +117,7 @@ final public class BLOBTest extends BaseJDBCTestCase
         throws SQLException, IOException
     {
         final Statement stmt = 
-            con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+            createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                                 ResultSet.CONCUR_UPDATABLE);
         final ResultSet rs = 
             stmt.executeQuery("SELECT * from " + 
@@ -133,6 +135,7 @@ final public class BLOBTest extends BaseJDBCTestCase
         verifyBlob(newVal, newSize, rs.getBlob(3));
         
         rs.close();
+        stmt.close();
     }
 
     /**
@@ -145,7 +148,7 @@ final public class BLOBTest extends BaseJDBCTestCase
         throws SQLException, IOException
     {
         final Statement stmt = 
-            con.createStatement(ResultSet.TYPE_FORWARD_ONLY,
+            createStatement(ResultSet.TYPE_FORWARD_ONLY,
                                 ResultSet.CONCUR_UPDATABLE);
         final ResultSet rs = 
             stmt.executeQuery("SELECT * from " + 
@@ -161,6 +164,7 @@ final public class BLOBTest extends BaseJDBCTestCase
         testUpdateBlobWithPositionedUpdate(rs, newVal, newSize);
         
         rs.close();
+        stmt.close();
     }
 
     /**
@@ -174,7 +178,7 @@ final public class BLOBTest extends BaseJDBCTestCase
         throws SQLException, IOException
     {
         final Statement stmt = 
-            con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+            createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                                 ResultSet.CONCUR_UPDATABLE);
         final ResultSet rs = 
             stmt.executeQuery("SELECT data,val,length from " + 
@@ -190,6 +194,7 @@ final public class BLOBTest extends BaseJDBCTestCase
         verifyBlob(newVal, newSize, rs.getBlob(1));
         
         rs.close();
+        stmt.close();
     }
 
     /**
@@ -203,7 +208,7 @@ final public class BLOBTest extends BaseJDBCTestCase
         throws SQLException, IOException
     {
         final Statement stmt = 
-            con.createStatement(ResultSet.TYPE_FORWARD_ONLY,
+            createStatement(ResultSet.TYPE_FORWARD_ONLY,
                                 ResultSet.CONCUR_UPDATABLE);
         final ResultSet rs = 
             stmt.executeQuery("SELECT data,val,length from " + 
@@ -220,6 +225,7 @@ final public class BLOBTest extends BaseJDBCTestCase
         testUpdateBlobWithResultSetMethods(rs, newVal, newSize);
         
         rs.close();
+        stmt.close();
     }
 
     /**
@@ -233,7 +239,7 @@ final public class BLOBTest extends BaseJDBCTestCase
         throws SQLException, IOException
     {
         final Statement stmt = 
-            con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
+            createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
                                 ResultSet.CONCUR_UPDATABLE);
         final ResultSet rs = 
             stmt.executeQuery("SELECT data from " + 
@@ -252,6 +258,7 @@ final public class BLOBTest extends BaseJDBCTestCase
         verifyBlob(newVal, newSize, rs.getBlob("DATA"));
         
         rs.close();
+        stmt.close();
     }
 
     /**
@@ -265,7 +272,7 @@ final public class BLOBTest extends BaseJDBCTestCase
         throws SQLException, IOException
     {
         final Statement stmt = 
-            con.createStatement(ResultSet.TYPE_FORWARD_ONLY,
+            createStatement(ResultSet.TYPE_FORWARD_ONLY,
                                 ResultSet.CONCUR_UPDATABLE);
         final ResultSet rs = 
             stmt.executeQuery("SELECT data from " + 
@@ -278,6 +285,7 @@ final public class BLOBTest extends BaseJDBCTestCase
         testUpdateBlobWithPositionedUpdate(rs, newVal, newSize);
         
         rs.close();
+        stmt.close();
     }
     
     
@@ -324,7 +332,7 @@ final public class BLOBTest extends BaseJDBCTestCase
                                                     final int newSize) 
         throws SQLException, IOException
     {
-        final PreparedStatement preparedStatement = con.prepareStatement
+        final PreparedStatement preparedStatement = getXConnection().prepareStatement
             ("UPDATE " + BLOBDataModelSetup.getBlobTableName() +
              " SET val=?, length = ?, data = ? WHERE CURRENT OF " +
              rs.getCursorName());
@@ -357,7 +365,7 @@ final public class BLOBTest extends BaseJDBCTestCase
     {
         println("Verify new value in table: " + newVal);
         
-        final Statement stmt = con.createStatement(ResultSet.TYPE_FORWARD_ONLY, 
+        final Statement stmt = createStatement(ResultSet.TYPE_FORWARD_ONLY, 
                                                    ResultSet.CONCUR_READ_ONLY);
         
         final ResultSet rs = 
@@ -379,6 +387,9 @@ final public class BLOBTest extends BaseJDBCTestCase
             foundVal = true;
         }
         assertTrue("No column with value= " + newVal + " found ", foundVal);
+        
+        rs.close();
+        stmt.close();
     }
                           
     /**
@@ -428,27 +439,6 @@ final public class BLOBTest extends BaseJDBCTestCase
         throws Exception
     {
         println("Setup of: " + getName());
-        con = getConnection();
-        con.setAutoCommit(false);
+        getXConnection().setAutoCommit(false);
     }
-    
-    /**
-     * Teardown test.
-     * Rollback connection and close it.
-     * @exception Exceptions causes the test to fail with error
-     */
-    public final void tearDown() 
-        throws Exception
-    {
-        println("Teardown of: " + getName());
-        try { 
-            con.rollback();
-            con.close();
-        } catch (SQLException e) {
-            printStackTrace(e);
-        }      
-    }
-    
-    /** JDBC Connection */        
-    private Connection con;
 }
