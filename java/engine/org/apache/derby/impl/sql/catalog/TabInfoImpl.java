@@ -63,14 +63,10 @@ import java.util.Properties;
 class TabInfoImpl implements TabInfo
 {
 	private IndexInfoImpl[]				indexes;
-	private String						name;
 	private long						heapConglomerate;
 	private int							numIndexesSet;
 	private boolean						heapSet;
-	private UUID						uuid;
-	private CatalogRowFactory			crf;
-
-	private	ExecutionFactory			executionFactory;
+	private final CatalogRowFactory			crf;
 
 	/**
 	 * Constructor
@@ -79,10 +75,8 @@ class TabInfoImpl implements TabInfo
 	 */
 	TabInfoImpl(CatalogRowFactory crf)
 	{
-		this.name = crf.getCatalogName();
 		this.heapConglomerate = -1;
 		this.crf = crf;
-		this.executionFactory = crf.getExecutionFactory();
 
 		int numIndexes = crf.getNumIndexes();
 
@@ -94,10 +88,6 @@ class TabInfoImpl implements TabInfo
 			for (int indexCtr = 0; indexCtr < numIndexes; indexCtr++)
 			{
 				indexes[indexCtr] = new IndexInfoImpl(
-											-1, 
-											crf.getIndexName(indexCtr),
-											crf.getIndexColumnCount(indexCtr),
-											crf.isIndexUnique(indexCtr),
 											indexCtr,
 											crf);
 			}
@@ -214,7 +204,7 @@ class TabInfoImpl implements TabInfo
 	 */
 	public String getTableName()
 	{
-		return name;
+		return crf.getCatalogName();
 	}
 
 	/**
@@ -223,24 +213,6 @@ class TabInfoImpl implements TabInfo
 	public String getIndexName(int indexId)
 	{
 		return indexes[indexId].getIndexName();
-	}
-
-	/**
-	 * @see TabInfo#setIndexName
-	 */
-	public void setIndexName(int indexID, String indexName)
-	{
-		if (SanityManager.DEBUG)
-		{
-			SanityManager.ASSERT(indexes != null,
-				"indexes is expected to be non-null");
-
-			if (indexID >= indexes.length)
-				SanityManager.THROWASSERT(
-				"indexID (" + indexID + ") is out of range(0-" +
-				indexes.length + ")");
-		}
-		indexes[indexID].setIndexName(indexName);
 	}
 
 	/**
@@ -357,26 +329,6 @@ class TabInfoImpl implements TabInfo
 		}
 
 		return indexes[indexNumber].getBaseColumnPosition(colNumber);
-	}
-
-	/**
-	 * @see TabInfo#setBaseColumnPosition
-	 */
-	public void setBaseColumnPosition(int indexNumber, int colNumber,
-									 int baseColumnPosition)
-	{
-		if (SanityManager.DEBUG)
-		{
-			SanityManager.ASSERT(indexes != null,
-				"indexes is expected to be non-null");
-			if (indexNumber >= indexes.length)
-			{
-				SanityManager.THROWASSERT("indexNumber (" + indexNumber + ") is out of range(0-" +
-					indexes.length + ")");
-			}
-		}
-
-		indexes[indexNumber].setBaseColumnPosition(colNumber, baseColumnPosition);
 	}
 
 	/**
@@ -1177,7 +1129,7 @@ class TabInfoImpl implements TabInfo
 			cids[ictr] = getIndexConglomerate(ictr);
 		}
 
-		rc = executionFactory.getRowChanger(getHeapConglomerate(),
+		rc = crf.getExecutionFactory().getRowChanger(getHeapConglomerate(),
 											(StaticCompiledOpenConglomInfo) null,
 											(DynamicCompiledOpenConglomInfo) null,
 											irgs,
@@ -1253,12 +1205,12 @@ class TabInfoImpl implements TabInfo
 	{
 		if (SanityManager.DEBUG)
 		{
-			return "name: " + name + 
+			return "name: " + this.getTableName() + 
 				"\n\theapCongolomerate: "+heapConglomerate +
 				"\n\tnumIndexes: " + ((indexes != null) ? indexes.length : 0) +
 				"\n\tnumIndexesSet: " + numIndexesSet +
 				"\n\theapSet: " + heapSet +
-				"\n\tuuid: " + uuid; 
+				"\n"; 
 		}
 		else
 		{

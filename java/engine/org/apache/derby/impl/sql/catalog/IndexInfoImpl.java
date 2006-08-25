@@ -37,35 +37,27 @@ import org.apache.derby.catalog.UUID;
 */
 class IndexInfoImpl
 {
-	private boolean				isUnique;
-	private int[]				columnPositions;
 	private IndexRowGenerator	irg;
-	private int					columnCount;
+
 	private long				conglomerateNumber;
-	private String				name;
+    
+    private final CatalogRowFactory crf;
+    private final int indexNumber;
 
 	/**
 	 * Constructor
 	 *
-	 * @param conglomerateNumber	The conglomerate number for the index
-	 * @param indexName				The name of the index
-	 * @param columnCount			The number of columns in the index
-	 * @param isUnique				Whether or not the index was declared as unique
 	 * @param indexNumber			(0-based) number of index within catalog's indexes
 	 * @param crf					CatalogRowFactory for the catalog
 	 */
-	IndexInfoImpl(long conglomerateNumber, String indexName, int columnCount,
-				  boolean isUnique,
-				  int indexNumber, CatalogRowFactory crf)
+	IndexInfoImpl(int indexNumber, CatalogRowFactory crf)
 	{
-		this.conglomerateNumber = conglomerateNumber;
-		name = indexName;
-		this.columnCount = columnCount;
-		this.isUnique = isUnique;
-		columnPositions = crf.getIndexColumnPositions(indexNumber);
+        this.crf = crf;
+        this.indexNumber = indexNumber;
+		this.conglomerateNumber = -1;
 	}
 
-	/**
+    /**
 	 * Get the conglomerate number for the index.
 	 *
 	 * @return long	The conglomerate number for the index.
@@ -92,17 +84,7 @@ class IndexInfoImpl
 	 */
 	String getIndexName()
 	{
-		return name;
-	}
-
-	/**
-	 * Set the name for the index.
-	 *
-	 * @param indexName		The name for the index.
-	 */
-	void setIndexName(String indexName)
-	{
-		name = indexName;
+		return crf.getIndexName(indexNumber);
 	}
 
 	/**
@@ -112,7 +94,7 @@ class IndexInfoImpl
 	 */
 	int getColumnCount()
 	{
-		return columnCount;
+		return crf.getIndexColumnCount(indexNumber);
 	}
 
 	/**
@@ -145,20 +127,7 @@ class IndexInfoImpl
 	 */
 	int getBaseColumnPosition(int colNumber)
 	{
-		return columnPositions[colNumber];
-	}
-
-	/**
-	 * Set the base column position for a column within a catalog
-	 * given the (0-based) column number for the column within the index.
-	 *
-	 * @param colNumber		The column number within the index
-	 * @param baseColumnPosition	The base column position for the column.
-	 */
-	void setBaseColumnPosition(int colNumber,
-									 int baseColumnPosition)
-	{
-		columnPositions[colNumber] = baseColumnPosition;
+		return crf.getIndexColumnPositions(indexNumber)[colNumber];
 	}
 
 	/**
@@ -168,6 +137,6 @@ class IndexInfoImpl
 	 */
 	boolean isIndexUnique()
 	{
-		return isUnique;
+		return crf.isIndexUnique(indexNumber);
 	}
 }
