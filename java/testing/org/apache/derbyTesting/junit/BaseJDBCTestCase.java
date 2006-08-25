@@ -70,7 +70,7 @@ public abstract class BaseJDBCTestCase
      */
     // TEMP NAME - WILL BE getConnection() once all uses of the
     // static getConnection() have been converted to openDefaultConnection
-    public Connection getXConnection() throws SQLException
+    public Connection getConnection() throws SQLException
     {
         if (conn != null)
         {
@@ -78,14 +78,18 @@ public abstract class BaseJDBCTestCase
                 return conn;
             conn = null;
         }
-        conn = getTestConfiguration().openDefaultConnection();
-        initializeConnection(conn);
-        return conn;
+        return conn = openDefaultConnection();
     }
     
     /**
      * Allow a sub-class to initialize a connection to provide
-     * consistent connection state for its tests. Called only
+     * consistent connection state for its tests. Called once
+     * for each time these method calls open a connection:
+     * <UL>
+     * <LI> getConnection()
+     * <LI> openDefaultConnection()
+     * <LI> openConnection(database)
+     * </UL>
      * when getConnection() opens a new connection. Default
      * action is to not modify the connection's state from
      * the initialization provided by the data source.
@@ -104,7 +108,7 @@ public abstract class BaseJDBCTestCase
      */
     public Statement createStatement() throws SQLException
     {
-        return getXConnection().createStatement();
+        return getConnection().createStatement();
     }
 
     /**
@@ -117,19 +121,31 @@ public abstract class BaseJDBCTestCase
     public Statement createStatement(int resultSetType,
             int resultSetConcurrency) throws SQLException
     {
-        return getXConnection().createStatement(resultSetType, resultSetConcurrency);
+        return getConnection().createStatement(resultSetType, resultSetConcurrency);
     }
     /**
      * Utility method to create a PreparedStatement using the connection
      * returned by getConnection.
      * @return Statement object from
-     * getConnection.createStatement(resultSetType, resultSetConcurrency)
+     * getConnection.prepareStatement(sql)
      * @throws SQLException
      */
     public PreparedStatement prepareStatement(String sql) throws SQLException
     {
-        return getXConnection().prepareStatement(sql);
+        return getConnection().prepareStatement(sql);
     }    
+
+    /**
+     * Utility method to create a CallableStatement using the connection
+     * returned by getConnection.
+     * @return Statement object from
+     * getConnection().prepareCall(sql)
+     * @throws SQLException
+     */
+    public CallableStatement prepareCall(String sql) throws SQLException
+    {
+        return getConnection().prepareCall(sql);
+    }
     
     /**
      * Utility method to commit using the connection
@@ -138,7 +154,7 @@ public abstract class BaseJDBCTestCase
      */
     public void commit() throws SQLException
     {
-        getXConnection().commit();
+        getConnection().commit();
     }  
     /**
      * Utility method to rollback using the connection
@@ -147,7 +163,7 @@ public abstract class BaseJDBCTestCase
      */
     public void rollback() throws SQLException
     {
-        getXConnection().rollback();
+        getConnection().rollback();
     } 
     /**
      * Tear down this fixture, sub-classes should call
@@ -161,12 +177,6 @@ public abstract class BaseJDBCTestCase
         conn = null;
     }
 
-    // TEMP
-    public static Connection getConnection() throws SQLException
-    {
-        return openDefaultConnection();
-    }
-
     /**
      * Open a connection to the default database.
      * If the database does not exist, it will be created.
@@ -175,14 +185,18 @@ public abstract class BaseJDBCTestCase
      * @return connection to default database.
      * @see TestConfiguration#openDefaultConnection()
      */
-    public static Connection openDefaultConnection()
+    public Connection openDefaultConnection()
         throws SQLException {
-        return CONFIG.openDefaultConnection();
+        Connection conn =  getTestConfiguration().openDefaultConnection();
+        initializeConnection(conn);
+        return conn;
     }
     
     public Connection openConnection(String databaseName) throws SQLException
     {
-        return getTestConfiguration().openConnection(databaseName);
+        Connection conn = getTestConfiguration().openConnection(databaseName);
+        initializeConnection(conn);
+        return conn;        
     }
     
     /**
@@ -202,7 +216,7 @@ public abstract class BaseJDBCTestCase
         };
         
         // Use the same encoding as the input for the output.    
-        return ij.runScript(getXConnection(), script, encoding,
+        return ij.runScript(getConnection(), script, encoding,
                 sink, encoding);       
     }
     
@@ -231,7 +245,7 @@ public abstract class BaseJDBCTestCase
      *         <code>false</code> otherwise.
      */
      public static boolean usingEmbedded() {
-         return CONFIG.getJDBCClient().isEmbedded();
+         return TestConfiguration.getCurrent().getJDBCClient().isEmbedded();
      }
     
     /**
@@ -241,7 +255,7 @@ public abstract class BaseJDBCTestCase
     *         <code>false</code> otherwise.
     */
     public static boolean usingDerbyNetClient() {
-        return CONFIG.getJDBCClient().isDerbyNetClient();
+        return TestConfiguration.getCurrent().getJDBCClient().isDerbyNetClient();
     }
     
     /**
@@ -251,7 +265,7 @@ public abstract class BaseJDBCTestCase
     *         <code>false</code> otherwise.
     */
     public static boolean usingDerbyNet() {
-        return CONFIG.getJDBCClient().isDB2Client();
+        return TestConfiguration.getCurrent().getJDBCClient().isDB2Client();
     }
 
     /**
