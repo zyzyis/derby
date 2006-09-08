@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * This class represents a REVOKE statement.
  */
-public class RevokeNode extends MiscellaneousStatementNode
+public class RevokeNode extends DDLStatementNode
 {
     private PrivilegeNode privileges;
     private List grantees;
@@ -94,7 +94,7 @@ public class RevokeNode extends MiscellaneousStatementNode
      */
 	public QueryTreeNode bind() throws StandardException
 	{
-        privileges = (PrivilegeNode) privileges.bind( new HashMap(), grantees);
+        privileges = (PrivilegeNode) privileges.bind( new HashMap(), grantees, false);
         return this;
     } // end of bind
 

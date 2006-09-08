@@ -1,7 +1,6 @@
 jdbcapi/metadata.java
 jdbcapi/metadataMultiConn.java
 jdbcapi/odbc_metadata.java
-lang/GroupByExpressionTest.junit
 lang/AIjdbc.java
 lang/AggregateClassLoading.java
 lang/CharUTF8.java
@@ -65,6 +64,7 @@ lang/forbitdata.java
 lang/forupdate.sql
 lang/functions.sql
 lang/grantRevokeDDL.sql
+lang/grantRevokeDDL2.sql
 lang/grantRevoke.java
 lang/groupBy.sql
 lang/holdCursorIJ.sql
