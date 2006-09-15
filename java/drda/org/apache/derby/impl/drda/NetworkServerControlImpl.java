@@ -297,11 +297,19 @@ public final class NetworkServerControlImpl {
 	// databases it has booted.
 	private boolean shutdownDatabasesOnShutdown = false;
 	
-    // Sun JCE does not have support for EUSRIDPWD, whereas
-    // most versions of IBM JCE have support for this.  Hence
-    // find out if the server can support EUSRIDPWD.
+    /**
+     * Can EUSRIDPWD security mechanism be used with 
+     * the current JVM
+     */
     private static boolean SUPPORTS_EUSRIDPWD = false;
 
+    /*
+     * DRDA Specification for the EUSRIDPWD security mechanism
+     * requires DH algorithm support with a 32-byte prime to be
+     * used. Not all JCE implementations have support for this.
+     * Hence here we need to find out if EUSRIDPWD can be used
+     * with the current JVM.
+     */ 
     static
     {
         try
@@ -1848,7 +1856,7 @@ public final class NetworkServerControlImpl {
 	 *
 	 * @param clientSession	session needing work
 	 */
-	protected void runQueueAdd(Session clientSession)
+	private void runQueueAdd(Session clientSession)
 	{
 		synchronized(runQueue)
 		{
@@ -2603,16 +2611,16 @@ public final class NetworkServerControlImpl {
     }
    
     /**
-     * EUSRIDPWD support depends on the availability of the
-     * algorithm in the JCE implementation in the classpath 
-     * of the server. At runtime, information about this 
-     * capability is figured out.  
-     * @return whether EUSRIDPWD is supported or not
-     */
+     * This method returns whether EUSRIDPWD security mechanism
+     * is supported or not. See class static block for more
+     * info.
+     * @return true if EUSRIDPWD is supported, false otherwise
+     */ 
     boolean supportsEUSRIDPWD()
     {
         return SUPPORTS_EUSRIDPWD;
     }
+    
 	/**
 	 * Get integer property values
 	 *
@@ -3086,7 +3094,7 @@ public final class NetworkServerControlImpl {
 	 *
 	 * @return value of maximum number of threads
 	 */
-	protected int getMaxThreads()
+	private int getMaxThreads()
 	{
 		synchronized(threadsSync) {
 			return maxThreads;
@@ -3364,52 +3372,79 @@ public final class NetworkServerControlImpl {
 
 
 	/**
-	 * Add To Session Table - for use by ClientThread, add a new Session to the sessionTable.
+	 * Add a session - for use by <code>ClientThread</code>. Put the session
+	 * into the session table and the run queue. Start a new
+	 * <code>DRDAConnThread</code> if there are more sessions waiting than
+	 * there are free threads, and the maximum number of threads is not
+	 * exceeded.
 	 *
-	 * @param i	Connection number to register
-	 * @param s	Session to add to the sessionTable
-	 */
-	protected void addToSessionTable(Integer i, Session s)
-	{
-		sessionTable.put(i, s);
-	}
-
-	/**
-	 * Get New Conn Num - for use by ClientThread, generate a new connection number for the attempted Session.
+	 * <p><code>addSession()</code> should only be called from one thread at a
+	 * time.
 	 *
-	 * @return	a new connection number
+	 * @param clientSocket the socket to read from and write to
 	 */
-	protected int getNewConnNum()
-	{
-		return ++connNum;
-	}
+	void addSession(Socket clientSocket) throws Exception {
 
+		int connectionNumber = ++connNum;
 
-	/**
-	 * Get Free Threads - for use by ClientThread, get the number of 
-	 * free threads in order to determine if
-	 * a new thread can be run.
-	 *
-	 * @return	the number of free threads
-	 */
-	protected int getFreeThreads()
-	{
-		synchronized(runQueue)
-		{
-			return freeThreads;
+		if (getLogConnections()) {
+			consolePropertyMessage("DRDA_ConnNumber.I",
+								   Integer.toString(connectionNumber));
+		}
+
+		// Note that we always re-fetch the tracing configuration because it
+		// may have changed (there are administrative commands which allow
+		// dynamic tracing reconfiguration).
+		Session session = new Session(connectionNumber, clientSocket,
+									  getTraceDirectory(), getTraceAll());
+
+		sessionTable.put(new Integer(connectionNumber), session);
+
+		// Check whether there are enough free threads to service all the
+		// threads in the run queue in addition to the newly added session.
+		boolean enoughThreads;
+		synchronized (runQueue) {
+			enoughThreads = (runQueue.size() < freeThreads);
+		}
+		// No need to hold the synchronization on runQueue any longer than
+		// this. Since no other threads can make runQueue grow, and no other
+		// threads will reduce the number of free threads without removing
+		// sessions from runQueue, (runQueue.size() < freeThreads) cannot go
+		// from true to false until addSession() returns.
+
+		DRDAConnThread thread = null;
+
+		// try to start a new thread if we don't have enough free threads
+		if (!enoughThreads) {
+			// Synchronize on threadsSync to ensure that the value of
+			// maxThreads doesn't change until the new thread is added to
+			// threadList.
+			synchronized (threadsSync) {
+				// only start a new thread if we have no maximum number of
+				// threads or the maximum number of threads is not exceeded
+				if ((maxThreads == 0) || (threadList.size() < maxThreads)) {
+					thread = new DRDAConnThread(session, this, getTimeSlice(),
+												getLogConnections());
+					threadList.add(thread);
+					thread.start();
+				}
+			}
+		}
+
+		// add the session to the run queue if we didn't start a new thread
+		if (thread == null) {
+			runQueueAdd(session);
 		}
 	}
 
 	/**
-	 * Get Thread List - for use by ClientThread, get the thread list 
-	 * Vector so that a newly spawned thread
-	 * can be run and added to the ThreadList from the ClientThread 
+	 * Remove a thread from the thread list. Should be called when a
+	 * <code>DRDAConnThread</code> has been closed.
 	 *
-	 * @return	the threadList Vector
+	 * @param thread the closed thread
 	 */
-	protected Vector getThreadList()
-	{
-		return threadList;
+	void removeThread(DRDAConnThread thread) {
+		threadList.remove(thread);
 	}
 	
 	protected Object getShutdownSync() { return shutdownSync; } 
