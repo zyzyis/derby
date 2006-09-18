@@ -1252,6 +1252,7 @@ Applications may need to take evasive action.
 </p>
 </blockquote>
 
+
 <hr/>
 <blockquote>
 <h3>
@@ -1261,7 +1262,7 @@ Applications may need to take evasive action.
 <h4>Problem</h4>
 <p>
 Result sets of type TYPE_SCROLL_INSENSITIVE used to implicitly close
-due when positioned in autocommit mode.
+when positioned at the end in autocommit mode.
 </p>
 </ul>
 </blockquote>
@@ -1269,32 +1270,38 @@ due when positioned in autocommit mode.
 <blockquote>
 <h4>Symptoms</h4>
 <p>
-The ResultSet would unexpectedly close.
+Calling the ResultSet.next() method when positioned on the last row of
+a result set of type SCROLL_INSENSITIVE in auto commit mode used to cause the result set to be closed.
 </p>
 </blockquote>
 
 <blockquote>
 <h4>Cause</h4>
 <p>
-The behavior was deliberate and was documented even though it violates
-the JDBC spec.
+The JDBC specification allows a JDBC driver to implicitly close a
+ResultSet when the ResultSet type is TYPE_FORWARD_ONLY and the next
+method of ResultSet returns false. Derby also used to implicitly close result sets of type SCROLL_INSENSITIVE when the ResultSet.next() method returns false in auto commit mode.
 </p>
 </blockquote>
 
 <blockquote>
 <h4>Solution</h4>
 <p>
-Derby has been recoded to conform to the JDBC spec. The ResultSet
-no longer closes in this scenario.
+The behavior of SCROLL_INSENSITIVE result sets in auto commit mode has
+been changed to comply with the JDBC4
+specification. SCROLL_INSENSITIVE result sets are not implicitly
+closed when calling the ResultSet.next() method in auto commit mode
+while positioned on the last row. 
 </p>
 </blockquote>
 
 <blockquote>
 <h4>Workaround</h4>
 <p>
-Fix applications which rely on this non-standard behavior.
+Fix applications which rely on the previous, non-standard behavior.
 </p>
 </blockquote>
+
 
 <hr/>
 <blockquote>
@@ -1304,51 +1311,61 @@ Fix applications which rely on this non-standard behavior.
 </h3>
 <h4>Problem</h4>
 <p>
-Statement.executeUpdate() behaves incorrectly in both the embedded
-and the network driver.
+The behaviour of executeQuery() and executeUpdate() did not match the
+JDBC specification when invoking stored procedures.
 </p>
 </ul>
 </blockquote>
 
 <blockquote>
 <h4>Symptoms</h4>
-<p>
- When invoking a stored procedure using Statement.executeUpdate(), the
-client driver and the embedded driver behave differently.
-</p>
-
-<p>
-If the stored procedure does not return any result set, the embedded
-driver returns 0, whereas the client returns -1.
-</p>
-
-<p>
-If the stored procedure returns one or more result sets, the embedded
-driver returns -1, whereas the client fails with an exception.
-</p>
+<ul>
+<li> When invoking a stored procedure with executeQuery() or
+    executeUpdate(), an exception was thrown indicating that the
+    procedure did not return the correct number of ResultSet objects,
+    although the correct number of ResultSet objects was in fact
+    returned.
+</li>
+<li> When invoking a stored procedure with executeQuery() or
+    executeUpdate(), and the procedure did not return the correct
+    number of ResultSet objects, the query executed successfully.
+</li>
+<li> With the network client driver, when invoking a stored procedure
+    with executeUpdate(), the return value was -1, whereas the JDBC
+    specification says it should be 0.
+</li>
+</ul>
 </blockquote>
 
 <blockquote>
 <h4>Cause</h4>
 <p>
-This is a bug.
+The methods executeQuery() and executeUpdate() were not implemented in
+compliance with the JDBC specification.
 </p>
 </blockquote>
 
 <blockquote>
 <h4>Solution</h4>
 <p>
-Derby behavior now conforms to the JDBC spec.
+In Derby 10.2, the behaviour of the methods executeQuery() and
+executeUpdate() has been changed to match the JDBC specification.
 </p>
 </blockquote>
 
 <blockquote>
 <h4>Workaround</h4>
 <p>
-Fix applications which rely on this non-standard behavior.
+Use execute() instead of executeUpdate()/executeQuery() to invoke a
+stored procedure which does not return exactly 0 or 1 ResultSet
+objects.
 </p>
 </blockquote>
 
+
+WORKAROUND
+
+None. 
 <hr/>
 <blockquote>
 <h3>
@@ -1357,7 +1374,12 @@ Fix applications which rely on this non-standard behavior.
 </h3>
 <h4>Problem</h4>
 <p>
-The detectability methods rowUpdated, rowInserted, rowDeleted can be called from illegal states in both clients.
+For a JDBC ResultSet with type TYPE_FORWARD_ONLY, the methods
+rowUpdated, rowDeleted and rowInserted could previously be called
+while not on a row, i.e. before positioning in the result set, while
+on insertRow, after updateRow before new positioning, after deleteRow
+before new positioning and when after last row. This is now
+disallowed.
 </p>
 </ul>
 </blockquote>
@@ -1365,25 +1387,30 @@ The detectability methods rowUpdated, rowInserted, rowDeleted can be called from
 <blockquote>
 <h4>Symptoms</h4>
 <p>
-These detectability methods fail to check that they can be called in
-some states. In the repro, calls are allowed while on insert row and
-when after last row. These should both fail. Both clients have the
-same problem. All three detectability methods have the same problem.
+Calls to any of these methods while not on a row will now throw
+SQLException with SQLState 24000.
 </p>
 </blockquote>
 
 <blockquote>
 <h4>Cause</h4>
 <p>
-This is a bug.
+Derby now disallows these calls when not on a row.
 </p>
 </blockquote>
 
 <blockquote>
 <h4>Solution</h4>
 <p>
-In all cases, the exception "no current row" (SQLState 24000) is
-thrown now. 
+Change the application to not call these methods unless on a row. Note
+that using them at all is rather meaningless for a ResultSet of type
+TYPE_FORWARD_ONLY since the returned result will always be 'false'.
+This is because once you modify a row, it can no longer be accessed,
+you need to move to the next row, if there is one, to get a new
+current row. Presently in Derby, these methods are only really
+meaningfully used for result sets of type TYPE_SCROLL_INSENSITIVE and
+of concurrency CONCUR_UPDATABLE in which case updated and deleted rows
+can be detected.
 </p>
 </blockquote>
 
