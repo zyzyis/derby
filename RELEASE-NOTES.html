@@ -165,12 +165,20 @@ JDK's beta license.
 </p>
 
 <p>
-You may build this optional JDBC 4.0 support as follows:
+You may build this optional JDBC 4.0 support as follows. (See also
+<a href="http://issues.apache.org/jira/browse/DERBY-1846">DERBY-1846</a>)
 </p>
 
-<p>
-<b><font color="red">???</font></b>
-</p>
+<ul>
+<li>Download the -bin and -src distributions of Derby 10.2.1.4 and unzip them.</li>
+<li>Set DERBY_HOME to the location where you have unzipped the -bin distribution.</li>
+<li>Set JAVA_HOME to the location of a JDK 1.6 JVM.</li>
+<li>cd into the tools/jdbc4 directory where you unzipped the -src distribution.</li>
+<li>Run the update-with-jdbc4 script (or batch file on Windows), and the
+jars in $DERBY_HOME/lib will be updated with the necessary JDBC 4
+support classes.</li>
+</ul>
+
 
 <h2><a name="New Features"></a>New Features</h2>
 
