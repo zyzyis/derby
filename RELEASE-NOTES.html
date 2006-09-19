@@ -923,6 +923,7 @@ invoking a procedure that returns a single Dynamic resultSet using
 CallableStatement.executeQuery().</li>
 <li><a href="#668">668</a> - SysInfo does not print the right information when Derby is not loaded through the classpath.</li>
 <li><a href="#721">721</a> - State of InputStream retrieved from resultset is not clean , if there exists previous InputStream .</li>
+<li><a href="#781">781</a> - Materialize subqueries in select list where possible to avoid creating invariant resultsets many times.</li>
 <li><a href="#822">822</a> - Client driver: Pre-fetch data on executeQuery()</li>
 <li><a href="#1130">1130</a> - Client should not allow databaseName to be set with setConnectionAttributes</li>
 <li><a href="#1177">1177</a> - updateObject with null as argument causes network driver to fail with NullPointerException</li>
@@ -1117,6 +1118,62 @@ Users must recode Applications which open
  multiple streams on the same column.
 </p>
 </blockquote>
+
+
+<hr/>
+<blockquote>
+<h3>
+<a name="781"></a>
+<a href="http://issues.apache.org/jira/browse/DERBY-781">DERBY-781</a>
+</h3>
+<h4>Problem</h4>
+<p>
+When optimizing a query that has one or more non-flattenable subqueries in the FROM clause, Derby will now check to see if it is possible to perform a hash join with that subquery as the inner table. Prior to Derby 10.2, the optimizer would never consider a hash join with a subquery; it only did nested loop joins.
+</p>
+</blockquote>
+
+<blockquote>
+<h4>Symptoms</h4>
+<p>
+Execution performance of queries containing non-flattenable subqueries may change. The expectation is that the new (10.2) query plans will show improved performance over the old ones.
+</p>
+<p>
+Another potential symptom is that the compilation time for such queries may increase. If this happens, the increase should only occur at compilation time; execution time should either improve or, at the very least, remain the same as in earlier versions of Derby.
+</p>
+</blockquote>
+
+<blockquote>
+<h4>Cause</h4>
+<p>
+If the optimizer chooses to do a hash join with a subquery, Derby only has to execute the subquery a single time per statement, after which Derby can just perform the desired join against the materialized result set. Depending on how many rows are in the outer table of the join, this once-per-statement execution of the subquery can lead to major performance improvements over the once-per-outer-row execution employed by earlier versions of Derby.
+</p>
+<p>
+As for the extra compilation time, this is due to the simple fact that the optimizer is now doing more work--i.e. in addition to considering nested loop joins with subqueries, it is now _also_ considering hash joins with those subqueries, and that means that it could potentially take longer for the optimizer to finish its work. Note again that, if it occurs, the increased time should only occur at compilation time; execution time should either improve or, at the very least, remain the same as in earlier versions of Derby.
+</p>
+</blockquote>
+
+<blockquote>
+<h4>Solution</h4>
+<p>
+This was an intentional change to improve the execution plans chosen by the optimizer for queries having large and/or complex subqueries. The expectation is that the new behavior--and the subsequent query plans--will lead to improved performance over the old ones, so no further solution is required.
+</p>
+</blockquote>
+
+<blockquote>
+<h4>Workaround</h4>
+<p>
+There is no way to disable/workaround this new behavior since the symptom as described above is a good one for Derby.
+</p>
+<p>
+That said, any user who notices a negative performance change after
+moving to Derby 10.2, and who believes that the difference in
+performance is related to this optimizer enhancement, is encouraged to
+visit the
+<a href="http://wiki.apache.org/db-derby/PerformanceDiagnosisTips">performance diagnosis page</a>
+and to follow up with his/her findings on the Derby mailing lists.
+</p>
+</blockquote>
+
 
 
 <hr/>
