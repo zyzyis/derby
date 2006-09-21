@@ -568,6 +568,10 @@ in Derby 10.2.1.4 but not in the preceding 10.1.3.1 release.
       <TD> OutOfMemory Error on continous execution of select statement using COUNT() and DISTINCT on same connection</TD>
     </TR>
     <TR>
+      <TD><a href="http://issues.apache.org/jira/browse/DERBY-781">DERBY-781</a></TD>
+      <TD> Materialize subqueries in select list where possible to avoid creating invariant resultsets many times.</TD>
+    </TR>
+    <TR>
       <TD><a href="http://issues.apache.org/jira/browse/DERBY-782">DERBY-782</a></TD>
       <TD> Improvement on org.apache.derby.impl.jdbc.EmbedBlob#length()</TD>
     </TR>
@@ -892,6 +896,10 @@ in Derby 10.2.1.4 but not in the preceding 10.1.3.1 release.
       <TD> Create index on large tables fails with too many open files , FileNotFoundException.</TD>
     </TR>
     <TR>
+      <TD><a href="http://issues.apache.org/jira/browse/DERBY-1675">DERBY-1675</a></TD>
+      <TD> Network Server should not send to client that it supports EUSRIDPWD when running against Sun JVM</TD>
+    </TR>
+    <TR>
       <TD><a href="http://issues.apache.org/jira/browse/DERBY-1681">DERBY-1681</a></TD>
       <TD> Regression (wrong results): Join predicate can be ignored for left-most child in a chain of nested unions.</TD>
     </TR>
@@ -914,6 +922,18 @@ in Derby 10.2.1.4 but not in the preceding 10.1.3.1 release.
     <TR>
       <TD><a href="http://issues.apache.org/jira/browse/DERBY-1767">DERBY-1767</a></TD>
       <TD> insertRow(), updateRow() and deleteRow() cannot handle table names and column names containing double quotes</TD>
+    </TR>
+    <TR>
+      <TD><a href="http://issues.apache.org/jira/browse/DERBY-1786">DERBY-1786</a></TD>
+      <TD> a crash during re-encryption of an existing  database with lot of tables can make database unrecoverable on a  next boot.</TD>
+    </TR>
+    <TR>
+      <TD><a href="http://issues.apache.org/jira/browse/DERBY-1809">DERBY-1809</a></TD>
+      <TD> Built-in functions not working in views.</TD>
+    </TR>
+    <TR>
+      <TD><a href="http://issues.apache.org/jira/browse/DERBY-1817">DERBY-1817</a></TD>
+      <TD> Race condition in network server's thread pool</TD>
     </TR>
   </TBODY>
 </TABLE>
