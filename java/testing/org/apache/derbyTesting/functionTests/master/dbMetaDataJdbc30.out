@@ -1,5 +1,5 @@
 Test dbMetaDataJdbc30 starting
-JDBC Driver 'Apache Derby Embedded JDBC Driver', version 10.2 (10.2.1.4 beta)
+JDBC Driver 'Apache Derby Embedded JDBC Driver', version 10.2 (10.2.1.4)
 DatabaseMetaData.getURL test passed
 supportsSavepoints() : true
 supportsNamedParameters() : false
