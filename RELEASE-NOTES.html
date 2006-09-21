@@ -35,23 +35,33 @@ The following improvements distinguish 10.2.1.4 from 10.1.3.1:
  <li>The ij sql interpreter now has command-line help
  and two new commands: <i>show tables</i> and <i>describe</i>.</li>
  <li>Tools can now be invoked without specifying a classpath just by
-typing <i>java -jar derbyTools.jar <b>toolName</b></i>.</li>
+typing <i>java -jar derbyrun.jar <b>toolName</b></i>.</li>
  </ul>
 </li>
 <li><b>Security</b>
  <ul>
- <li>Databases can now be re-encrypted.</li>
- <li>Secure connections can now be required.</li>
- <li>Where possible, userids and passwords are encrypted.</li>
- <li>Support has been added for DRDA userid/password substitution.</li>
- <li>GRANT/REVOKE commands have been added.</li>
+ <li>Databases can now be re-encrypted. See
+ <a href="http://issues.apache.org/jira/browse/DERBY-1156">DERBY-1156</a>.
+ </li>
+ <li>Secure connections can now be required. See
+ <a href="http://issues.apache.org/jira/browse/DERBY-928">DERBY-928</a>.
+ </li>
+ <li>Where possible, userids and passwords are encrypted. See
+ <a href="http://issues.apache.org/jira/browse/DERBY-962">DERBY-962</a>.
+ </li>
+ <li>Support has been added for DRDA userid/password substitution. See
+ <a href="http://issues.apache.org/jira/browse/DERBY-528">DERBY-528</a>.
+ </li>
+ <li>SQL Standard GRANT/REVOKE support has been added for
+ authenticated users. See the "User authorizations" section of the
+ Developer's Guide.</li>
  </ul>
 </li>
 <li><b>Administration</b>
  <ul>
- <li>Installation scripts now follow Apache conventions.</li>
- <li>The syntax for invoking diagnostic VTIs has been simplified.</li>
- <li>Online backup has been added.</li>
+ <li>New scripts have been added in the bin directory which follow Apache conventions. The scripts in the frameworks directory are deprecated and may be removed in future releases.</li>
+ <li>System procedures have been added for access to diagnostic information previously available only through non-standard VTIs.</li>
+ <li>Online backup is now available through new system procedures.</li>
  </ul>
 </li>
 <li><b>JDBC</b>
@@ -66,10 +76,13 @@ typing <i>java -jar derbyTools.jar <b>toolName</b></i>.</li>
 <li><b>SQL</b>
  <ul>
  <li>Expressions are now allowed in the GROUP BY clause.</li>
- <li>Identity columns can be reset to start at a new value.</li>
+ <li>Identity columns can be reset to start at a new value. Please
+ consult documentation on the
+ RESTART WITH clause of ALTER TABLE (found in the Reference Guide).</li>
  <li>XPath/XQuery support has been improved.</li>
  <li>New builtin math functions have been added and wired-in
- as JDBC escape functions.</li>
+ as JDBC escape functions. See the "Built-in functions" section of the
+ Reference Guide.</li>
  <li>Unary <i>+/-</i> are now allowed for <i>?</i> parameters.</li>
  <li>Optimizer overrides have been added.</li>
  <li>Triggers can now call Java procedures.</li>
@@ -109,6 +122,7 @@ SQL support:
 <li>Sub-queries and joins</li>
 <li>Primary key, foreign key, unique and check constraints</li>
 <li>Referential actions</li>
+<li>GRANT/REVOKE support for databases with SQL authorization.</li>
 </ul>
 
 <p>
@@ -121,7 +135,7 @@ Other features:
 <li>Configurable authentication including LDAP support</li>
 <li>Import/Export</li>
 <li>On-line backup and recovery support</li>
-<li>Optional on-disk encryption</li>
+<li>Optional on-disk encryption including re-encryption of existing encrypted databases</li>
 <li>Platform independent database format</li>
 <li>Full support for Java 2 Security Manager</li>
 </ul>
@@ -139,7 +153,7 @@ JDK/JDBC support:
 
 <p>
 Derby 10.2.1.4 comes with source code for drivers which conform to
-the upcoming new version of
+a beta version of
 the JDBC standard, JDBC 4.0. This source code conforms to the
 following state of the JDBC 4.0 specification:
 </p>
@@ -160,7 +174,7 @@ JDBC 4.0 support yourself. This will let you use JDBC 4.0 features
 when you run Derby 10.2.1.4 on Java SE 6.
 If you compile Derby code using libraries
 from a beta build of JDK 6, then you may use your built code only for
-evaluation purposes. This is the restriction imposed by the
+evaluation purposes. This restriction is imposed by the
 JDK's beta license.
 </p>
 
@@ -171,9 +185,9 @@ You may build this optional JDBC 4.0 support as follows. (See also
 
 <ul>
 <li>Download the -bin and -src distributions of Derby 10.2.1.4 and unzip them.</li>
-<li>Set DERBY_HOME to the location where you have unzipped the -bin distribution.</li>
-<li>Set JAVA_HOME to the location of a JDK 1.6 JVM.</li>
-<li>cd into the tools/jdbc4 directory where you unzipped the -src distribution.</li>
+<li>Set the environment variable DERBY_HOME in your shell environment to the location where you have unzipped the -bin distribution.</li>
+<li>Set the environment variable JAVA_HOME in your shell environment to the location of a JDK 1.6 JVM.</li>
+<li>In your shell, change directory into the tools/jdbc4 directory where you unzipped the -src distribution.</li>
 <li>Run the update-with-jdbc4 script (or batch file on Windows), and the
 jars in $DERBY_HOME/lib will be updated with the necessary JDBC 4
 support classes.</li>
