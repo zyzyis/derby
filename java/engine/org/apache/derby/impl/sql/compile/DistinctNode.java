@@ -324,7 +324,6 @@ public class DistinctNode extends SingleChildResultSetNode
 		 *			from the sort
 		 *  arg6: row size
 		 *  arg7: resultSetNumber
-		 *  arg8: closeCleanup
 		 */
 
 		acb.pushGetResultSetFactoryExpression(mb);
@@ -338,8 +337,8 @@ public class DistinctNode extends SingleChildResultSetNode
 		mb.push(resultSetNumber);
 		mb.push(costEstimate.rowCount());
 		mb.push(costEstimate.getEstimatedCost());
-		closeMethodArgument(acb, mb);
 
-		mb.callMethod(VMOpcode.INVOKEINTERFACE, (String) null, "getSortResultSet", ClassName.NoPutResultSet, 10);
+		mb.callMethod(VMOpcode.INVOKEINTERFACE, (String) null, "getSortResultSet",
+                ClassName.NoPutResultSet, 9);
 	}
 }

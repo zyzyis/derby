@@ -371,7 +371,6 @@ public class OrderByList extends OrderedColumnList
 		 *  arg7: resultSetNumber
 		 *  arg8: estimated row count
 		 *  arg9: estimated cost
-		 *  arg10: closeCleanup
 		 */
 
 		acb.pushGetResultSetFactoryExpression(mb);
@@ -402,16 +401,8 @@ public class OrderByList extends OrderedColumnList
 		mb.push(costEstimate.rowCount());
 		mb.push(costEstimate.getEstimatedCost());
 
-		/**
-			if this is the statement result set (today, it always is), 
-			and there is a current
-			date/time request, then a method will have been generated.
-			Otherwise, a simple null is passed in to the result set method.
-		 */
-        mb.pushNull(ClassName.GeneratedMethod);
-
 		mb.callMethod(VMOpcode.INVOKEINTERFACE, (String) null, "getSortResultSet",
-							ClassName.NoPutResultSet, 10);
+							ClassName.NoPutResultSet, 9);
 
 	}
 
