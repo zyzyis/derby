@@ -46,9 +46,6 @@ typing <i>java -jar derbyrun.jar <b>toolName</b></i>.</li>
  <li>Secure connections can now be required. See
  <a href="http://issues.apache.org/jira/browse/DERBY-928">DERBY-928</a>.
  </li>
- <li>Where possible, userids and passwords are encrypted. See
- <a href="http://issues.apache.org/jira/browse/DERBY-962">DERBY-962</a>.
- </li>
  <li>Support has been added for DRDA userid/password substitution. See
  <a href="http://issues.apache.org/jira/browse/DERBY-528">DERBY-528</a>.
  </li>
@@ -179,19 +176,13 @@ JDK's beta license.
 </p>
 
 <p>
-You may build this optional JDBC 4.0 support as follows. (See also
-<a href="http://issues.apache.org/jira/browse/DERBY-1846">DERBY-1846</a>)
+To build this optional JDBC 4.0 support yourself,
+please download the source
+distribution and consult BUILDING.txt.
+You may also follow a simplified set of instructions for building JDBC
+4.0 support, which you may find on the
+<a href="http://wiki.apache.org/db-derby/">Derby wiki</a>.
 </p>
-
-<ul>
-<li>Download the -bin and -src distributions of Derby 10.2.1.4 and unzip them.</li>
-<li>Set the environment variable DERBY_HOME in your shell environment to the location where you have unzipped the -bin distribution.</li>
-<li>Set the environment variable JAVA_HOME in your shell environment to the location of a JDK 1.6 JVM.</li>
-<li>In your shell, change directory into the tools/jdbc4 directory where you unzipped the -src distribution.</li>
-<li>Run the update-with-jdbc4 script (or batch file on Windows), and the
-jars in $DERBY_HOME/lib will be updated with the necessary JDBC 4
-support classes.</li>
-</ul>
 
 
 <h2><a name="New Features"></a>New Features</h2>
@@ -280,10 +271,6 @@ which appear in Derby 10.2.1.4 but not in the preceding release 10.1.3.1.
      <TR>
        <TD><a href="http://issues.apache.org/jira/browse/DERBY-928">DERBY-928</a></TD>
        <TD>Restrict client connections,derby.drda.securityMechanism</TD>             </TR>
-     <TR>
-       <TD><a href="http://issues.apache.org/jira/browse/DERBY-962">DERBY-962</a></TD>
-       <TD>Encrypt userid/password where possible</TD>
-     </TR>
      <TR>
        <TD><a href="http://issues.apache.org/jira/browse/DERBY-1019">DERBY-1019</a></TD>
        <TD>Simplify tool invocation</TD>
@@ -976,6 +963,7 @@ CallableStatement.executeQuery().</li>
 <li><a href="#1384">1384</a> - Increase default BLOB/CLOB length to maximum supported (2G?)</li>
 <li><a href="#1621">1621</a> - Trigger action statement is not recompile when there is a change that would affect it.</li>
 <li><a href="#1652">1652</a> - Update trigger updating the same rows as the original update does not throw an exception ERROR 54038: "Maximum depth of nested triggers was exceeded" as it should</li>
+<li><a href="#1867">1867</a> - Document algorithm support required for using secmec 8(USRSSSBPWD) and limitation on ibm141 vm.</li>
 </ul>
 
 <hr/>
@@ -1828,6 +1816,51 @@ update statement can cause the trigger to fire in the cREATE TRIGGER statement. 
 <p>
 In the above statement, the trigger will only fire when an update
 is made to the "info" column instead of any column(s). 
+</p>
+</blockquote>
+
+
+<hr/>
+<blockquote>
+<h3>
+<a name="1867"></a>
+<a href="http://issues.apache.org/jira/browse/DERBY-1867">DERBY-1867</a>
+</h3>
+<h4>Problem</h4>
+<p>
+With IBM 1.4.1 JVM, trying to connect to the server using the derby client with security mechanism 8 (USRSSSBPWD) will result in error.
+</p>
+</ul>
+</blockquote>
+
+<blockquote>
+<h4>Symptoms</h4>
+<p>
+Connecting using the client driver with security mechanism 8 will throw the following error
+ERROR XJ112: Security exception encountered, see next exception for details.
+The stack trace will show that the problem is caused by java.security.NoSuchAlgorithmException: SHA1PRNG SecureRandom not available
+</p>
+</blockquote>
+
+<blockquote>
+<h4>Cause</h4>
+<p>
+Current USRSSBPWD implementation uses SHA1PRNG algorithm to generate random number(seed) that gets exchanged between client and the server. The SHA1PRNG algorithm is not available with the JCE provider that comes with IBM JVM version 1.4.1.
+</p>
+</blockquote>
+
+<blockquote>
+<h4>Solution</h4>
+<p>
+You must use another JCE provider.
+</p>
+</blockquote>
+
+<blockquote>
+<h4>Workaround</h4>
+<p>
+If you need to use the security mechanism 8, then make sure that support for SHA1PRNG is available in the JCE provider that is available with a particular JVM.
+For e.g. Use IBM 1.4.2 JVM that has support for SHA1PRNG or the Sun JVMs.
 </p>
 </blockquote>
 
