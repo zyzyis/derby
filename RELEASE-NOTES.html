@@ -57,7 +57,7 @@ typing <i>java -jar derbyrun.jar <b>toolName</b></i>.</li>
 <li><b>Administration</b>
  <ul>
  <li>New scripts have been added in the bin directory which follow Apache conventions. The scripts in the frameworks directory are deprecated and may be removed in future releases.</li>
- <li>System procedures have been added for access to diagnostic information previously available only through non-standard VTIs.</li>
+ <li>System tables have been added for access to diagnostic information previously available only through non-standard VTIs.</li>
  <li>Online backup is now available through new system procedures.</li>
  </ul>
 </li>
@@ -115,7 +115,7 @@ SQL support:
 <ul>
 <li>Schemas, tables, temporary tables, views, triggers, indexes, savepoints</li>
 <li>Java procedures and functions</li>
-<li>Standard datatypes including BLOB and CLOB</li>
+<li>Standard datatypes including XML, BLOB, and CLOB</li>
 <li>Sub-queries and joins</li>
 <li>Primary key, foreign key, unique and check constraints</li>
 <li>Referential actions</li>
@@ -169,10 +169,6 @@ When run on Java SE 6, Derby 10.2.1.4 exposes the same JDBC 3.0 implementation
 seen when run on JDK 1.4 and 1.5. You may, however, compile Derby's
 JDBC 4.0 support yourself. This will let you use JDBC 4.0 features
 when you run Derby 10.2.1.4 on Java SE 6.
-If you compile Derby code using libraries
-from a beta build of JDK 6, then you may use your built code only for
-evaluation purposes. This restriction is imposed by the
-JDK's beta license.
 </p>
 
 <p>
@@ -558,7 +554,7 @@ in Derby 10.2.1.4 but not in the preceding 10.1.3.1 release.
     </TR>
     <TR>
       <TD><a href="http://issues.apache.org/jira/browse/DERBY-730">DERBY-730</a></TD>
-      <TD> SQL statements that fail to parse remain in the statement cache.</TD>
+      <TD> SQL statements that fail to parse remain in the statement cache.</TD>g
     </TR>
     <TR>
       <TD><a href="http://issues.apache.org/jira/browse/DERBY-732">DERBY-732</a></TD>
@@ -991,15 +987,11 @@ Please be aware of the following issues:
 
 <ul>
 <li><a href="#253">253</a> - Client should throw not implemented exception for depricated setUnicodeStream/getUnicodeStream</li>
-<li><a href="#501">501</a> - Client and embedded drivers differ on
-invoking a procedure that returns a single Dynamic resultSet using
-CallableStatement.executeQuery().</li>
 <li><a href="#668">668</a> - SysInfo does not print the right information when Derby is not loaded through the classpath.</li>
 <li><a href="#721">721</a> - State of InputStream retrieved from resultset is not clean , if there exists previous InputStream .</li>
 <li><a href="#781">781</a> - Materialize subqueries in select list where possible to avoid creating invariant resultsets many times.</li>
 <li><a href="#822">822</a> - Client driver: Pre-fetch data on executeQuery()</li>
 <li><a href="#1130">1130</a> - Client should not allow databaseName to be set with setConnectionAttributes</li>
-<li><a href="#1177">1177</a> - updateObject with null as argument causes network driver to fail with NullPointerException</li>
 <li><a href="#1295">1295</a> - Result sets of type TYPE_SCROLL_INSENSITIVE should not implicitly close due to positioning in autocommit mode</li>
 <li><a href="#1314">1314</a> - Differences between client and embedded when invoking stored procedures using Statement.executeUpdate()</li>
 <li><a href="#1323">1323</a> - Detectability methods rowUpdated, rowInserted, rowDeleted can be called from illegal states in both clients</li>
@@ -1056,56 +1048,6 @@ setUnicodeStream() and getUnicodeStream().
 </p>
 </blockquote>
 
-
-
-<hr/>
-<blockquote>
-<h3>
-<a name="501"></a>
-<a href="http://issues.apache.org/jira/browse/DERBY-501">DERBY-501</a>
-</h3>
-<h4>Problem</h4>
-<p>
-The behaviour of executeQuery() and executeUpdate() have been
-  modified to follow the JDBC standard when executing stored
-  procedures.
-</p>
-</blockquote>
-
-<blockquote>
-<h4>Symptoms</h4>
-<p>
-  The behaviour of executeQuery() and executeUpdate() have been
-  modified to follow the JDBC standard when executing stored
-  procedures. It is now possible to use executeQuery() to execute a
-  stored procedure that returns exactly one ResultSet (this would fail
-  in previous releases of Derby). executeUpdate() will raise an
-  exception if it is used to execute a stored procedure that returns
-  one or more ResultSets (this would succeed in previous releases of
-  Derby).
-</p>
-</blockquote>
-
-<blockquote>
-<h4>Cause</h4>
-<p>
-Previous Derby behavior did not comply with the JDBC spec.
-</p>
-</blockquote>
-
-<blockquote>
-<h4>Solution</h4>
-<p>
-This was an intentional change. No Derby product solution is offered.
-</p>
-</blockquote>
-
-<blockquote>
-<h4>Workaround</h4>
-<p>
-No workaround. The behavior now conforms to the JDBC spec.
-</p>
-</blockquote>
 
 
 <hr/>
@@ -1341,48 +1283,6 @@ If using release prior to version 10.2, make sure database name is set
 only as a DataSource property when using Derby's client DataSources.
 </p>
 </blockquote>
-
-<hr/>
-<blockquote>
-<h3>
-<a name="1177"></a>
-<a href="http://issues.apache.org/jira/browse/DERBY-1177">DERBY-1177</a>
-</h3>
-<h4>Problem</h4>
-<p>
-Calling ResultSet.updateObject(column, object) caused the network driver to give NullPointerException if the object parameter was null. 
-</p>
-</ul>
-</blockquote>
-
-<blockquote>
-<h4>Symptoms</h4>
-<p>
-Instead of setting the column to null, Derby used to raise a NullPointerException.
-</p>
-</blockquote>
-
-<blockquote>
-<h4>Cause</h4>
-<p>
-A bug in the network driver.
-</p>
-</blockquote>
-
-<blockquote>
-<h4>Solution</h4>
-<p>
-Derby no longer throws an exception if ResultSet.updateObject(..) is called with a null as parameter. Instead it will update the column with a SQL NULL value.
-</p>
-</blockquote>
-
-<blockquote>
-<h4>Workaround</h4>
-<p>
-Applications may need to take evasive action.
-</p>
-</blockquote>
-
 
 <hr/>
 <blockquote>
