@@ -6,6 +6,7 @@
 <ul>
 <li><a href="#Overview">Overview</a></li>
 <li><a href="#JDBC 4.0 Support">JDBC 4.0 Support</a></li>
+<li><a href="#XML Support">XML Support</a></li>
 <li><a href="#New Features">New Features</a></li>
 <li><a href="#Bug Fixes">Bug Fixes</a></li>
 <li><a href="#Issues">Issues</a></li>
@@ -185,6 +186,24 @@ section of the
 <a href="http://wiki.apache.org/db-derby/TenTwoRelease">Derby 10.2 wiki page</a>.
 </p>
 
+<h2><a name="XML Support">XML Support</a></h2>
+
+<p>
+If you intend to use any of the Derby XML operators, you must ensure that
+you have:
+</p>
+
+<ul>
+<li>A JAXP parser in your classpath</li>
+<li>Apache Xalan in your classpath</li>
+</ul>
+
+<p>
+Apache Derby 10.2.1.6 has been tested with Xalan-Java Version 2.7.0.  If you
+have a version of Xalan that is earlier than 2.7, the Derby XML operators may
+still work. However, it is possible that you will experience unexpected errors
+when using the Derby XML operators.
+</li>
 
 <h2><a name="New Features"></a>New Features</h2>
 
