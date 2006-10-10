@@ -1249,6 +1249,15 @@ public class RunTest
 		    usesystem = sp.getProperty("usesystem");
 		}
 
+		// junit tests do not run successfully with j9 - except for j9_foundation 
+		// see DERBY-1785
+		if ((jvmName.startsWith("j9")) && (!jvmName.equals("j9_foundation")) && testType.equals("junit"))
+		{
+		    skiptest = true;
+		    addSkiptestReason("Test skipped: cannot run junit test with j9 jvms because of security manager issue in the jvm");
+		}
+			
+
 		// Some tests will not run well in a suite with use process false 
 		// with some frameworks, so skip
 		if (!useprocess && !skiptest )
