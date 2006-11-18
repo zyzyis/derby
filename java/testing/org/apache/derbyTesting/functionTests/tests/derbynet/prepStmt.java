@@ -52,7 +52,8 @@ public class prepStmt
          "table doubletab", "table numtab", "table Numeric_Tab", "table jira614", 
 	 "table jira614_a", "table jira428", "table jira125", "table varcharclobtab", 
          "table jira125125125125125125125125125125125125125125125125125125125125125125125125125125125125125125125",
-         "table jira1533_a", "table jira1533_b"};
+         "table jira1533_a", "table jira1533_b", 
+         "table jira1454"};
 
 	public static void main (String args[])
 	{
