@@ -867,7 +867,7 @@ START: clobTestSelfDestructive2
 length of clob chosen is 10000
 After drop
 Expect to get an IOException, container has been closed
-EXPECTED IO Exception:ERROR 40XD0: Container has been closed
+EXPECTED IO Exception:ERROR 40XD0: Container has been closed.
 START: clobNegativeTest_Derby265
 -----------------------------
 START: blobTestNegativeTest_Derby265
