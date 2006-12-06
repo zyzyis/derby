@@ -311,8 +311,41 @@ public class SqlXmlUtil implements Formatable
         throws Exception
     {
         ArrayList aList = new ArrayList();
-        aList.add(dBuilder.parse(
-            new InputSource(new StringReader(xmlAsText))));
+
+        /* The call to dBuilder.parse() is a call to an external
+         * (w.r.t. to Derby) JAXP parser.  If the received XML
+         * text references an external DTD, then the JAXP parser
+         * will try to read that external DTD.  Thus we wrap the
+         * call to parse inside a privileged action to make sure
+         * that the JAXP parser has the required permissions for
+         * reading the DTD file.
+         */
+        try {
+
+            final InputSource is = new InputSource(new StringReader(xmlAsText));
+            aList.add(java.security.AccessController.doPrivileged(
+                new java.security.PrivilegedExceptionAction()
+                {
+                    public Object run() throws IOException, SAXException
+                    {
+                        return dBuilder.parse(is);
+                    }
+                }));
+
+        } catch (java.security.PrivilegedActionException pae) {
+
+            /* Unwrap the privileged exception so that the user can
+             * see what the underlying error is. For example, it could
+             * be an i/o error from parsing the XML value, which can
+             * happen if the XML value references an external DTD file
+             * but the JAXP parser hits an i/o error when trying to read
+             * the DTD.  In that case we want to throw the i/o error
+             * itself so that it does not appear as a security exception
+             * to the user.
+             */
+            throw pae.getException();
+
+        }
 
         /* The second argument in the following call is for
          * catching cases where we have a top-level (parentless)
