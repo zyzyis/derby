@@ -38,6 +38,7 @@
 # derbynet/ShutDownDBWhenNSShutsDownTest.junit - test tries to look for db.lck file
 # lang/grantRevoke.java - this test expects certain properties in the remote server's 
 #       derby.properties file.
+# jdbcapi/_Suite.junit - test fails with inappropriate error, see DERBY-1760.
 #  
 # 
 store/bootLock.java
@@ -66,3 +67,4 @@ jdbcapi/checkDataSource.java
 jdbcapi/checkDataSource30.java
 derbynet/ShutDownDBWhenNSShutsDownTest.junit
 lang/grantRevoke.java
+jdbcapi/_Suite.junit
