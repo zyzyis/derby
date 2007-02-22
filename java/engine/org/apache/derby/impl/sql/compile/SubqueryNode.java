@@ -489,6 +489,12 @@ public class SubqueryNode extends ValueNode
 			/* Bind the expression in the SELECT list */
 			resultSet.bindTargetExpressions(fromList);
 
+			/* 
+			 * reject any untyped nulls in the EXISTS subquery before 
+			 * SELECT TRUE transformation. 
+			 */
+			resultSet.bindUntypedNullsToResultColumns(null);
+	        
 			/* Transform the ResultColumn into true.
 			 * NOTE: This may be a 2nd instance of the same transformation for
 			 * an EXISTS (select * ...), since we had to transform the 
@@ -510,6 +516,9 @@ public class SubqueryNode extends ValueNode
 
 		resultSet.bindResultColumns(fromList);
 
+		/* reject any untyped nulls in the subquery */
+		resultSet.bindUntypedNullsToResultColumns(null);
+        
 		/* We need to reset resultColumns since the underlying resultSet may
 		 * be a UNION (and UnionNode.bindResultColumns() regens a new RCL).
 		 */
