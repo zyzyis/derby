@@ -399,7 +399,10 @@ class AlterTableConstantAction extends DDLSingleTableConstantAction
 				}
 				else if (columnInfo[ix].action == 
 						 ColumnInfo.MODIFY_COLUMN_DEFAULT_RESTART ||
-						 columnInfo[ix].action == ColumnInfo.MODIFY_COLUMN_DEFAULT_INCREMENT)
+						 columnInfo[ix].action == 
+						 ColumnInfo.MODIFY_COLUMN_DEFAULT_INCREMENT ||
+						 columnInfo[ix].action == 
+						 ColumnInfo.MODIFY_COLUMN_DEFAULT_VALUE)
 				{
 					modifyColumnDefault(activation, ix);
 				}
@@ -1065,6 +1068,7 @@ class AlterTableConstantAction extends DDLSingleTableConstantAction
 			dd.setAutoincrementValue(tc, td.getUUID(), columnInfo[ix].name,
 					 columnInfo[ix].autoincStart, false);
 		} 
+		// else we are simply changing the default value
 	}
 
 
