@@ -3679,6 +3679,7 @@ public abstract class EmbedResultSet extends ConnectionChild
                         ps.execute(act, true, 0L); 
                 rs.close();
                 rs.finish();
+                act.close();
 
                 lcc.popStatementContext(statementContext, null);
             } catch (StandardException t) {
@@ -3759,6 +3760,7 @@ public abstract class EmbedResultSet extends ConnectionChild
             }
             rs.close();
             rs.finish();
+            act.close();
             //For forward only resultsets, after a update, the ResultSet will be positioned right before the next row.
             if (getType() == TYPE_FORWARD_ONLY) {
                 currentRow.setRowArray(null);
@@ -3824,6 +3826,7 @@ public abstract class EmbedResultSet extends ConnectionChild
                 }
                 rs.close();
                 rs.finish();
+                act.close();
                 //After a delete, the ResultSet will be positioned right before 
                 //the next row.
                 currentRow.setRowArray(null);
