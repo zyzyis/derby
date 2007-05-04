@@ -740,7 +740,7 @@ final class GenericStatementContext
 
 			sb.append(getStatementText());
 
-			if (lcc.getLogStatementText() && (pvs != null) && pvs.getParameterCount() > 0)
+			if ((pvs != null) && pvs.getParameterCount() > 0)
 			{
 				String pvsString = " with " + pvs.getParameterCount() +
 						" parameters " + pvs.toString();
