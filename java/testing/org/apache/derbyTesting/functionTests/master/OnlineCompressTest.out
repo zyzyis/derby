@@ -78,3 +78,6 @@ Executing test: end test5: 2000 row test.
 Executing test: begin test5: 10000 row test.
 Executing test: end test5: 10000 row test.
 Ending test: test5
+Beginning test: test7
+Executing test: delete rows case succeeded.
+Ending test: test7
