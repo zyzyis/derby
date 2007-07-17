@@ -560,8 +560,7 @@ done row 8, length was 300000
 row 9 is null, skipped
 clobTest91 finished
 START: clobTest92
-FAIL -- unexpected exception ****************
-SQLSTATE(40XL1): A lock could not be obtained within the time requested
+clobTest92 finished
 START: clobTest93
 clobTest92 finished
 START: clobTest94

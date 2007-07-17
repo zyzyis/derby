@@ -11,6 +11,7 @@ jdbcapi/users2.sql
 jdbcapi/secureUsers.sql
 jdbcapi/secureUsers1.sql
 jdbcapi/maxfieldsize.java
+jdbcapi/LargeDataLocks.java
 jdbcapi/LOBTest.java
 jdbcapi/blobclob4BLOB.java
 jdbcapi/parameterMapping.java
