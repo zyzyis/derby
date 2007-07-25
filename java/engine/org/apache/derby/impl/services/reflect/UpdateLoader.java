@@ -40,12 +40,13 @@ import org.apache.derby.iapi.services.property.PropertyUtil;
 import org.apache.derby.iapi.reference.Property;
 
 import java.io.InputStream;
+import java.security.AccessController;
 
 import org.apache.derby.iapi.reference.MessageId;
 import org.apache.derby.iapi.reference.Module;
 import org.apache.derby.iapi.services.i18n.MessageService;
 
-public class UpdateLoader {
+class UpdateLoader {
     
     /**
      * List of packages that Derby will not support being loaded
@@ -77,7 +78,7 @@ public class UpdateLoader {
 	private boolean needReload;
 	private JarReader jarReader;
 
-	public UpdateLoader(String classpath, DatabaseClasses parent, boolean verbose, boolean normalizeToUpper) 
+	UpdateLoader(String classpath, DatabaseClasses parent, boolean verbose, boolean normalizeToUpper) 
 		throws StandardException {
 
         this.normalizeToUpper = normalizeToUpper;
@@ -97,15 +98,25 @@ public class UpdateLoader {
 
 	private void initializeFromClassPath(String classpath) throws StandardException {
 
-		String[][] elements = IdUtil.parseDbClassPath(classpath, normalizeToUpper);
+		final String[][] elements = IdUtil.parseDbClassPath(classpath, normalizeToUpper);
 		
-		int jarCount = elements.length;
+		final int jarCount = elements.length;
 		jarList = new JarLoader[jarCount];
 			
-		for (int i = 0; i < jarCount; i++) {
-			jarList[i] = new JarLoader(this, elements[i], vs);
-		}
-
+        if (jarCount != 0) {
+            // Creating class loaders is a restricted operation
+            // so we need to use a privileged block.
+            AccessController.doPrivileged
+            (new java.security.PrivilegedAction(){
+                
+                public Object run(){    
+    		      for (int i = 0; i < jarCount; i++) {
+    			     jarList[i] = new JarLoader(UpdateLoader.this, elements[i], vs);
+    		      }
+                  return null;
+                }
+            });
+        }
 		if (vs != null) {
 			vs.println(MessageService.getTextMessage(MessageId.CM_CLASS_LOADER_START, classpath));
 		}
@@ -119,7 +130,7 @@ public class UpdateLoader {
 
 		@exception ClassNotFoundException Class can not be found
 	*/
-	public Class loadClass(String className, boolean resolve) 
+	Class loadClass(String className, boolean resolve) 
 		throws ClassNotFoundException {
 
 
@@ -177,7 +188,7 @@ public class UpdateLoader {
 		}
 	}
 
-	public InputStream getResourceAsStream(String name) {
+	InputStream getResourceAsStream(String name) {
 
 		InputStream is = (myLoader == null) ?
 			ClassLoader.getSystemResourceAsStream(name) :
@@ -224,7 +235,7 @@ public class UpdateLoader {
 		}
 	}
 
-	public synchronized void modifyClasspath(String classpath)
+	synchronized void modifyClasspath(String classpath)
 		throws StandardException {
 
 		// lock transaction classloader exclusively
@@ -237,7 +248,7 @@ public class UpdateLoader {
 	}
 
 
-	public synchronized void modifyJar(boolean reload) throws StandardException {
+	synchronized void modifyJar(boolean reload) throws StandardException {
 
 		// lock transaction classloader exclusively
 		lockClassLoader(ShExQual.EX);
@@ -289,7 +300,7 @@ public class UpdateLoader {
 		return null;
 	}
 
-	public void close() {
+	void close() {
 
 		for (int i = 0; i < jarList.length; i++) {
 			jarList[i].setInvalid();
@@ -308,7 +319,7 @@ public class UpdateLoader {
 		initDone = true;
 	}
 
-	public int getClassLoaderVersion() {
+	int getClassLoaderVersion() {
 		return version;
 	}
 
