@@ -4527,6 +4527,7 @@ class DRDAConnThread extends Thread {
 							if (stream==null) {
 								ps.setBytes(i+1, null);
 							} else {
+								stmt.setStreamedParameter(stream);
 								ps.setBinaryStream(i+1, stream, (int) stream.getLength());
 							}
 							
