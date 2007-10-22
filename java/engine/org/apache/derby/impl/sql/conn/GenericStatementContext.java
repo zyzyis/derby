@@ -99,6 +99,9 @@ final class GenericStatementContext
 	*/
 	private short			sqlAllowed = -1;
 
+    // Counter used to create unique savepoint names.
+    private static long nextNameId = Long.MIN_VALUE;
+
 	/*
 	   constructor
 		@param tc transaction
@@ -109,7 +112,7 @@ final class GenericStatementContext
 		this.lcc = lcc;
 		this.tc = tc;
 
-		internalSavePointName = "ISSP" + hashCode();
+        internalSavePointName = createInternalSavepointName();
 
 		if (SanityManager.DEBUG)
 		{
@@ -118,6 +121,16 @@ final class GenericStatementContext
 		}
 
 	}
+
+    /**
+     * Generate a unique name for this savepoint.
+     * This method should only be called from the constructor.
+     *
+     * @return the savepoint name.
+     */
+    private synchronized static String createInternalSavepointName() {
+        return "ISSP" + nextNameId++;
+    }
 
     /**
      * This is a TimerTask that is responsible for timing out statements,
