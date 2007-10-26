@@ -26,5 +26,5 @@ EXPECTED: Empty ResultSet
 getAttributes() with null :
 EXPECTED: Empty ResultSet
 locatorsUpdateCopy(): 
-Returned: false
+Returned: true
 Test dbMetaDataJdbc30 finished
