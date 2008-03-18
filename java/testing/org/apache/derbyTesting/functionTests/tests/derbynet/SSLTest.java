@@ -124,7 +124,8 @@ public class SSLTest extends BaseJDBCTestCase
                                        startupArgs,
                                        true,
                                        true, 
-                                       sslTest._inputStreamHolder);
+                                       sslTest._inputStreamHolder,
+                                       "MARY", "marypwd");
         
         sslTest.nsTestSetup = networkServerTestSetup;
         

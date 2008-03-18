@@ -250,7 +250,9 @@ public class SecureServerTest extends BaseJDBCTestCase
              startupArgs,
              true,
              secureServerTest._outcome.serverShouldComeUp(),
-             secureServerTest._inputStreamHolder
+             secureServerTest._inputStreamHolder,
+             SST_USER_NAME,
+             SST_PASSWORD
              );
 
         secureServerTest.nsTestSetup = networkServerTestSetup;

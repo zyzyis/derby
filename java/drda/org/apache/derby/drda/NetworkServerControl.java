@@ -214,7 +214,13 @@ public class NetworkServerControl{
 										portNumber);
 
 	}
-	
+
+    public NetworkServerControl(InetAddress address,int portNumber, String user, String password) throws Exception
+    {
+        serverImpl = new NetworkServerControlImpl(address, 
+                portNumber);
+
+    }
 
 	/**
 	 * 
@@ -239,7 +245,14 @@ public class NetworkServerControl{
 
 	}
 	
-    
+
+    public NetworkServerControl(String user, String password) throws Exception
+    {
+        
+        serverImpl = new NetworkServerControlImpl();
+
+    }
+
 	/**
 	 * main routine for NetworkServerControl
 	 *

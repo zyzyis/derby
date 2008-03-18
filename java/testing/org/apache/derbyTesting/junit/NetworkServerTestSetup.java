@@ -71,6 +71,10 @@ final public class NetworkServerTestSetup extends BaseTestSetup {
     private final String[]    systemProperties;
     private final String[]    startupArgs;
     private Process serverProcess;
+
+    private static String user;
+
+    private  static String password;
     
     /**
      * Decorator this test with the NetworkServerTestSetup
@@ -96,7 +100,9 @@ final public class NetworkServerTestSetup extends BaseTestSetup {
          String[] startupArgs,
          boolean useSeparateProcess,
          boolean serverShouldComeUp,
-         InputStream[] inputStreamHolder
+         InputStream[] inputStreamHolder,
+         String user,
+         String password
         )
     {
         super(test);
@@ -108,6 +114,8 @@ final public class NetworkServerTestSetup extends BaseTestSetup {
         this.useSeparateProcess = true;
         this.serverShouldComeUp = serverShouldComeUp;
         this.inputStreamHolder = inputStreamHolder;
+        this.user = user;
+        this.password = password;
     }
 
     /**
@@ -327,7 +335,7 @@ final public class NetworkServerTestSetup extends BaseTestSetup {
         if (config.getSsl() == null) {
             return new NetworkServerControl
                 (InetAddress.getByName(config.getHostName()), 
-                 config.getPort());
+                 config.getPort(),user,password);
         } else {
             // This is a hack. A NetworkServerControl constructor with
             // the needed interface to control sslMode (and possibly
