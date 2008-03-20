@@ -1697,7 +1697,7 @@ public class DatabaseMetaDataTest extends BaseJDBCTestCase {
                 
                 Types.INTEGER
               };
-        
+
         boolean[] JDBC_COLUMN_NULLABILITY = {
                 false, false, true, true,
                 true, true, false, false,
@@ -1708,24 +1708,13 @@ public class DatabaseMetaDataTest extends BaseJDBCTestCase {
                 true 
         };
         
-        // DERBY-2307 Nullablity is wrong for columns 1,7,9 (1-based)
-        // Make a modified copy of JDBC_COLUMN_NULLABILITY
-        // here to allow the test to pass. Left JDBC_COLUMN_NULLABILITY
-        // as the expected versions as it is also used for the ODBC
-        // checks below and has the correct values.
-        boolean[] JDBC_COLUMN_NULLABILITY_DERBY_2307 = {
-                true, false, true, true,
-                true, true, true, false,
-                true, true, false,
-                true, true,
-                true, true,
-                true, true,
-                true 
-        };
-        
+        // DERBY-2307 Nullablity is wrong for column 1 (1-based)
+        // Modify JDBC_COLUMN_NULLABILITY to reflect current reality
+        JDBC_COLUMN_NULLABILITY[1 - 1] = true;
+      
         ResultSet rs = getDMD().getTypeInfo();
         assertMetaDataResultSet(rs, JDBC_COLUMN_NAMES, JDBC_COLUMN_TYPES
-        , JDBC_COLUMN_NULLABILITY_DERBY_2307
+        , JDBC_COLUMN_NULLABILITY
         );
 
 	/*
@@ -2091,11 +2080,11 @@ public class DatabaseMetaDataTest extends BaseJDBCTestCase {
           Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR,
           Types.VARCHAR, Types.VARCHAR, Types.VARCHAR, Types.VARCHAR,
           Types.VARCHAR, Types.VARCHAR
-         }
-        , new boolean[] {
-          true, false, false, true, // TABLE_SCHEM cannot be NULL in Derby
-          true, true, true, true,
-          true, true
+         },
+         new boolean[] {
+                 false, false, false, true, // TABLE_SCHEM cannot be NULL in Derby
+                 false, true, true, true,
+                 true, true        
         }
         );        
     }
@@ -2696,11 +2685,11 @@ public class DatabaseMetaDataTest extends BaseJDBCTestCase {
 
             // incorrect
             new boolean[] {
-                true, false, false, false,
-                true, false, false, false,
-                true, true, true, false,
-                false, true
-            }
+                    false, false, false, false,
+                    false, false, false, false,
+                    true, true, true, false,
+                    false, true
+                }
 
             // correct
             /* new boolean[] {
