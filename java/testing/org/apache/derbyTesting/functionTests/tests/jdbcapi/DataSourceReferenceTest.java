@@ -308,6 +308,9 @@ public class DataSourceReferenceTest extends BaseJDBCTestCase {
                 continue;
             if (!methodName.startsWith("get"))
                 continue;
+            // Skip over getMaxStatements. New with 10.4
+            if (methodName.equals("getMaxStatements"))
+            	continue;
             if (m.getParameterTypes().length != 0)
                 continue;
 
