@@ -166,11 +166,9 @@ public class StatementTest
             // The SQL State is incorrect in the embedded client, see
             // JIRA id DERBY-1168
             String expectedState;
-            if ( this.usingDerbyNetClient() )
-                expectedState = SQLStateConstants.INVALID_TRANSACTION_STATE_ACTIVE_SQL_TRANSACTION;
-            else
-                expectedState = SQLStateConstants.INVALID_TRANSACTION_STATE_NO_SUBCLASS;
-            
+
+            expectedState = SQLStateConstants.INVALID_TRANSACTION_STATE_ACTIVE_SQL_TRANSACTION;
+        
             if ( ! expectedState.equals(sqle.getSQLState()) )
             {
                 System.err.println("ERROR: Unexpected SQL State encountered; "
