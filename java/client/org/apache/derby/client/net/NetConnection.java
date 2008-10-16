@@ -1788,9 +1788,6 @@ public class NetConnection extends org.apache.derby.client.am.Connection {
         if (isOpen()) {
             return; // still open, return
         }
-        if (xares_ != null) {
-            xares_.removeXaresFromSameRMchain();
-        }
     }
     
     /**
@@ -1804,9 +1801,6 @@ public class NetConnection extends org.apache.derby.client.am.Connection {
         if (isOpen()) {
             return; // still open, return
         }
-        if (xares_ != null) {
-            xares_.removeXaresFromSameRMchain();
-        }
     }
     
     /**
@@ -1819,9 +1813,6 @@ public class NetConnection extends org.apache.derby.client.am.Connection {
             return;
         if (isOpen()) {
             return; // still open, return
-        }
-        if (xares_ != null) {
-            xares_.removeXaresFromSameRMchain();
         }
     }
     
@@ -1837,9 +1828,6 @@ public class NetConnection extends org.apache.derby.client.am.Connection {
         
         if (isOpen()) {
             return; // still open, return
-        }
-        if (xares_ != null) {
-            xares_.removeXaresFromSameRMchain();
         }
     }
     
