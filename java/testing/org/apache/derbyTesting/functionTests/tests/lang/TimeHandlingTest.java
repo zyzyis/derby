@@ -37,6 +37,7 @@ import junit.framework.TestSuite;
 
 import org.apache.derbyTesting.junit.BaseJDBCTestCase;
 import org.apache.derbyTesting.junit.CleanDatabaseTestSetup;
+import org.apache.derbyTesting.junit.JDBC;
 
 
 public class TimeHandlingTest extends BaseJDBCTestCase {
@@ -68,6 +69,8 @@ public class TimeHandlingTest extends BaseJDBCTestCase {
 
     public static Test suite()
     {
+    	if (! JDBC.vmAtLeastJDBC3())
+    		return new TestSuite("Do not run test with jdk13. DERBY-1840");
         TestSuite suite = new TestSuite(TimeHandlingTest.class);
         
         return new CleanDatabaseTestSetup(suite) {

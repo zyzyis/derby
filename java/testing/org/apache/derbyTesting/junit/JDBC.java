@@ -42,6 +42,12 @@ public class JDBC {
      */
     private static final boolean HAVE_SAVEPOINT
                            = haveClass("java.sql.Savepoint");
+    
+    /** Does the ParameterMetaData class exist? Indicates
+     * At least JDK1.4
+     */
+    private static final boolean HAVE_PARAMETER_METADATA = 
+    	haveClass("java.sql.ParameterMetaData");
 
     /**
      * Does the java.sql.SQLXML class exist, indicates JDBC 4. 
@@ -106,7 +112,12 @@ public class JDBC {
 	{
 		return !HAVE_DRIVER
 		       && HAVE_SAVEPOINT;
-	}	
+	}
+	
+	public static boolean vmAtLeastJDBC3() {
+		return HAVE_PARAMETER_METADATA;
+	}
+	
 	
 	/**
 	 * Rollback and close a connection for cleanup.
