@@ -36,3 +36,4 @@ store/onlineBackupTest4.sql
 store/BackupPathTests.java
 store/LogDeviceTest.java
 store/BootAllTest.junit
+store/ClobReclamationTest
