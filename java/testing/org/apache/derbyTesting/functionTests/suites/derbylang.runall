@@ -47,6 +47,7 @@ lang/declareGlobalTempTableJava.java
 lang/declareGlobalTempTableJavaJDBC30.java
 lang/delete.sql
 lang/depend.sql
+lang/derby4095Test.java
 lang/derived.sql
 lang/desc_index.sql
 lang/distinct.sql
