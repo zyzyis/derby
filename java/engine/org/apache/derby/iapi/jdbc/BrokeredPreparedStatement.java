@@ -88,6 +88,11 @@ public class BrokeredPreparedStatement extends BrokeredStatement
         return getPreparedStatement().executeUpdate();
     }
 
+	public void close() throws SQLException
+	{
+	    control.closeRealPreparedStatement();
+	}
+	
     /**
      * Set a parameter to SQL NULL.
      *
