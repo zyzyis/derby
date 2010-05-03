@@ -62,7 +62,8 @@ public class DaylightSavingTest extends BaseJDBCTestCase {
         Statement s = createStatement();
         s.execute("CREATE TABLE DERBY4582(" +
                 "ID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, " +
-                "TS TIMESTAMP, T TIME, D DATE, T2 TIME, D2 DATE)");
+                "TS TIMESTAMP, T TIME, D DATE, T2 TIME, D2 DATE, " +
+                "TS_STR VARCHAR(100), T_STR VARCHAR(100), D_STR VARCHAR(100))");
 
         Calendar localCal = Calendar.getInstance();
 
@@ -92,20 +93,31 @@ public class DaylightSavingTest extends BaseJDBCTestCase {
 
         // Store the GMT representations of the times.
         PreparedStatement insert = prepareStatement(
-                "INSERT INTO DERBY4582(TS, T, D, T2, D2) VALUES (?,?,?,?,?)");
+                "INSERT INTO DERBY4582 " +
+                "(TS, T, D, T2, D2, TS_STR, T_STR, D_STR) " +
+                "VALUES (?,?,?,?,?,?,?,?)");
         for (int i = 0; i < timestamps.length; i++) {
             Timestamp ts = timestamps[i];
             Time t = times[i];
             Date d = dates[i];
+
             // Set the TIMESTAMP/TIME/DATE values TS/T/D with their respective
             // setter methods.
             insert.setTimestamp(1, ts, cal);
             insert.setTime(2, t, cal);
             insert.setDate(3, d, cal);
+
             // Set the TIME/DATE values T2/D2 with setTimestamp() to verify
             // that this alternative code path also works.
             insert.setTimestamp(4, ts, cal);
             insert.setTimestamp(5, ts, cal);
+
+            // Also insert the values into VARCHAR columns so that we can
+            // check that they are converted correctly.
+            insert.setTimestamp(6, ts, cal);
+            insert.setTime(7, t, cal);
+            insert.setDate(8, d, cal);
+
             insert.execute();
         }
 
@@ -120,6 +132,10 @@ public class DaylightSavingTest extends BaseJDBCTestCase {
             // T2 and D2 should have the same values as T and D.
             assertEquals("T2", stripDate(times[i], cal), rs.getTime(5, cal));
             assertEquals("D2", stripTime(dates[i], cal), rs.getDate(6, cal));
+            // The VARCHAR columns should have the same values as TS, T and D.
+            assertEquals("TS_STR", timestamps[i], rs.getTimestamp(7, cal));
+            assertEquals("T_STR", stripDate(times[i], cal), rs.getTime(8, cal));
+            assertEquals("D_STR", stripTime(dates[i], cal), rs.getDate(9, cal));
         }
         JDBC.assertEmpty(rs);
 
@@ -161,18 +177,22 @@ public class DaylightSavingTest extends BaseJDBCTestCase {
             Timestamp ts2 = rs.getTimestamp(1, cal);
             cal.clear();
             cal.setTime(ts2);
+            localCal.clear();
+            localCal.setTime(ts1);
             assertEquals("TS.YEAR",
-                    ts1.getYear() + 1900, cal.get(Calendar.YEAR));
+                    localCal.get(Calendar.YEAR), cal.get(Calendar.YEAR));
             assertEquals("TS.MONTH",
-                    ts1.getMonth(), cal.get(Calendar.MONTH));
+                    localCal.get(Calendar.MONTH), cal.get(Calendar.MONTH));
             assertEquals("TS.DATE",
-                    ts1.getDate(), cal.get(Calendar.DAY_OF_MONTH));
+                    localCal.get(Calendar.DAY_OF_MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH));
             assertEquals("TS.HOURS",
-                    ts1.getHours(), cal.get(Calendar.HOUR_OF_DAY));
+                    localCal.get(Calendar.HOUR_OF_DAY),
+                    cal.get(Calendar.HOUR_OF_DAY));
             assertEquals("TS.MINUTES",
-                    ts1.getMinutes(), cal.get(Calendar.MINUTE));
+                    localCal.get(Calendar.MINUTE), cal.get(Calendar.MINUTE));
             assertEquals("TS.SECONDS",
-                    ts1.getSeconds(), cal.get(Calendar.SECOND));
+                    localCal.get(Calendar.SECOND), cal.get(Calendar.SECOND));
             assertEquals("TS.NANOS",
                     ts1.getNanos(), ts2.getNanos());
 
@@ -183,12 +203,15 @@ public class DaylightSavingTest extends BaseJDBCTestCase {
             Time t2 = rs.getTime(2, cal);
             cal.clear();
             cal.setTime(t2);
+            localCal.clear();
+            localCal.setTime(t1);
             assertEquals("T.HOURS",
-                    t1.getHours(), cal.get(Calendar.HOUR_OF_DAY));
+                    localCal.get(Calendar.HOUR_OF_DAY),
+                    cal.get(Calendar.HOUR_OF_DAY));
             assertEquals("T.MINUTES",
-                    t1.getMinutes(), cal.get(Calendar.MINUTE));
+                    localCal.get(Calendar.MINUTE), cal.get(Calendar.MINUTE));
             assertEquals("T.SECONDS",
-                    t1.getSeconds(), cal.get(Calendar.SECOND));
+                    localCal.get(Calendar.SECOND), cal.get(Calendar.SECOND));
 
             Date d1 = dates[i];
             rs.updateDate(3, d1);
@@ -197,12 +220,15 @@ public class DaylightSavingTest extends BaseJDBCTestCase {
             Date d2 = rs.getDate(3, cal);
             cal.clear();
             cal.setTime(d2);
+            localCal.clear();
+            localCal.setTime(d1);
             assertEquals("D.YEAR",
-                    d1.getYear() + 1900, cal.get(Calendar.YEAR));
+                    localCal.get(Calendar.YEAR), cal.get(Calendar.YEAR));
             assertEquals("D.MONTH",
-                    d1.getMonth(), cal.get(Calendar.MONTH));
+                    localCal.get(Calendar.MONTH), cal.get(Calendar.MONTH));
             assertEquals("D.DATE",
-                    d1.getDate(), cal.get(Calendar.DAY_OF_MONTH));
+                    localCal.get(Calendar.DAY_OF_MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH));
 
             rs.updateRow();
         }
