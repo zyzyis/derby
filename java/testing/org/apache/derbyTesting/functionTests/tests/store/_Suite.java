@@ -58,6 +58,7 @@ public class _Suite extends BaseTestCase  {
         suite.addTest(Derby3625Test.suite());
         suite.addTest(Derby151Test.suite());
         suite.addTest(Derby4676Test.suite());
+        suite.addTest(BootLockTest.suite());
         suite.addTest(PositionedStoreStreamTest.suite());
         suite.addTest(OSReadOnlyTest.suite());
         suite.addTest(BackupRestoreTest.suite());
