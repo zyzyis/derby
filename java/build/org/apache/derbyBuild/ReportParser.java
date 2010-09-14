@@ -76,7 +76,7 @@ public abstract class ReportParser
      */
     public static ReportParser makeReportParser()
     {
-        return new April_2010();
+        return new September_2010();
     }
     
     /////////////////////////////////////////////////////////////////////////
@@ -164,7 +164,7 @@ public abstract class ReportParser
      * <li>Fix Version/s</li>
      * </ul>
      */
-    public static final class April_2010 extends ReportParser
+    public static class April_2010 extends ReportParser
     {
         public TagReader parseNextIssue( TagReader masterReport ) throws Exception
         {
@@ -216,9 +216,12 @@ public abstract class ReportParser
 
         /**
          * <p>
-         * The attachment ids don't turn up in the html reports produced by the Apache
-         * JIRA site. So, lamely, we hardcode attachment ids here. For this ReportParser,
-         * we hardcode the attachment ids of the 10.6.1 release notes.
+         * The attachment ids don't turn up in the html reports produced by the
+         * Apache JIRA site. So, lamely, we hardcode attachment ids here. For
+         * this ReportParser, we hardcode the attachment ids of the 10.6.1
+         * release notes. If one produce similar report as .xml format instead
+         * of .html for fixedBugsList, one can grep for releaseNote.html to get
+         * the attachemtn ids easier
          * </p>
          */
         public long getReleaseNoteAttachmentID( TagReader tr ) throws Exception
@@ -244,4 +247,24 @@ public abstract class ReportParser
         }
     }
 
+    /*
+     * For release 10.6.2.0, this class is introduce to generate the release
+     * note attachment id.
+     */
+    public static final class September_2010 extends April_2010 {
+        public long getReleaseNoteAttachmentID(TagReader tr) throws Exception {
+            tr.reset();
+
+            long result = NO_RELEASE_NOTE;
+            String key = parseKey(tr);
+
+            if (key.equals("4677")) {
+                result = 12454149L;
+            } else if (key.equals("2925")) {
+                result = 12379029L;
+            }
+
+            return result;
+        }
+    }
 }

@@ -289,7 +289,7 @@ public class ReleaseNotesGenerator extends GeneratorBase {
         for ( Iterator i = JiraIssue.createJiraIssueList( bugListDoc, excludeReleaseIDList, reportParser ).iterator(); i.hasNext(); )
         {
             JiraIssue issue = (JiraIssue) i.next();
-            //println("Fixed: "+ issue.getKey());
+            println("Fixed: " + issue.getKey());
             Element row = insertRow(table);
             Element linkColumn = insertColumn(row);
             Element descriptionColumn = insertColumn(row);
@@ -399,8 +399,6 @@ public class ReleaseNotesGenerator extends GeneratorBase {
         addHeadlinedItem(list, COMPILER_HEADLINE,
                 summary.getTextByTagName(SUM_COMPILER));
 
-        addHeadlinedItem(list, JSR169_HEADLINE,
-                summary.getTextByTagName(SUM_JSR169));
     }
 
 

@@ -149,6 +149,7 @@ public class GeneratorBase extends Task {
      */
     public void setBugListFileName(String bugListFileName) throws Exception {
         this.bugListFileName = bugListFileName;
+        // println(bugListFileName);
         bugListDoc = new TagReader( new FileInputStream(bugListFileName) );
     }
 
