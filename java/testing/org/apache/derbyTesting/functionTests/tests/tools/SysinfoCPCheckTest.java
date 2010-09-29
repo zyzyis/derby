@@ -137,7 +137,7 @@ public class SysinfoCPCheckTest extends BaseJDBCTestCase {
 
             byte[] testRawBytes = rawBytes.toByteArray();
 
-            //System.out.println("cp command: -cp " + tstargs[tst][0]);
+            System.out.println("cp command: -cp " + tstargs[tst][0]);
 
             String s = null;
 
@@ -167,12 +167,13 @@ public class SysinfoCPCheckTest extends BaseJDBCTestCase {
 
                 // get the appropriate line for the full line comparison
                 int linenumber = Integer.parseInt(tstargs[tst][1]);
-
+                System.out.println("linenumber=" + linenumber);
                 boolean found = false;
 
                 for (int i=0; i<linenumber; i++)
                 {
                     s = sysinfoOutput.readLine();
+                    System.out.println(i + ":" + s);
                     if (tstargs[tst][3] != null)
                     {
                         // do the search for the optional string comparison
@@ -186,7 +187,7 @@ public class SysinfoCPCheckTest extends BaseJDBCTestCase {
 
                 // read the line to be compared
                 s = sysinfoOutput.readLine();
-
+                System.out.println((linenumber + 1) + ":" + s);
                 if (s == null)
                     fail("encountered unexpected null strings");
                 else
@@ -196,7 +197,8 @@ public class SysinfoCPCheckTest extends BaseJDBCTestCase {
 
                 // read one more line - should be the next command's sequence number
                 s = sysinfoOutput.readLine();
-
+                System.out.println(s);
+                System.out.println((linenumber + 2) + ":" + s);
                 sysinfoOutput.close();
             } catch (Exception e) {
                 e.printStackTrace();

@@ -671,9 +671,9 @@ public static void getMainInfo (java.io.PrintWriter aw, boolean pause) {
 		}
 
 		catch (Throwable t) {
-
-			failures.append(notFound(cn, library));
-
+			t.printStackTrace();
+			failures.append(notFound(cn, library, t.getMessage()));
+			
 		}
 
 
@@ -689,7 +689,8 @@ public static void getMainInfo (java.io.PrintWriter aw, boolean pause) {
 		}
 
 		catch (Throwable t) {
-			failures.append(notFound(cn, library));
+			t.printStackTrace();
+			failures.append(notFound(cn, library, t.getMessage()));
 
 		}
 
@@ -704,12 +705,12 @@ public static void getMainInfo (java.io.PrintWriter aw, boolean pause) {
 		temp.append(crLf());
 		return temp.toString();
 	}
-	private static String notFound(String cn, String library) {
+	private static String notFound(String cn, String library, String exceptionText) {
 
 		StringBuffer temp = new StringBuffer(crLf());
 		temp.append("   " + library);
 		temp.append(crLf());
-		temp.append("    " + Main.getTextMessage("SIF08.U", cn));
+		temp.append("    " + Main.getTextMessage("SIF08.U", cn, exceptionText));
 		temp.append(crLf());
 		temp.append(crLf());
 		return temp.toString();
