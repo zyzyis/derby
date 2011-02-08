@@ -774,19 +774,6 @@ public class StoredPage extends CachedPage
 		// if it is null, assume spareSpace and minimumRecordSize is the
 		// same.  We would only call initFromData after a restore then.
 
-		try 
-        {
-			readPageHeader();
-			initSlotTable(newIdentity);
-		}
-        catch (IOException ioe) 
-        {
-			// i/o methods on the byte array have thrown an IOException
-			throw dataFactory.markCorrupt(
-                StandardException.newException(
-                    SQLState.DATA_CORRUPT_PAGE, ioe, newIdentity));
-		}
-
 		try
 		{
 			validateChecksum(newIdentity);
@@ -850,8 +837,19 @@ public class StoredPage extends CachedPage
 			}
 		}
 	
-
-	}
+        try 
+        {
+            readPageHeader();
+            initSlotTable(newIdentity);
+        }
+        catch (IOException ioe) 
+        {
+            // i/o methods on the byte array have thrown an IOException
+            throw dataFactory.markCorrupt(
+                StandardException.newException(
+                    SQLState.DATA_CORRUPT_PAGE, ioe, newIdentity));
+        }
+    }
 
     /**
      * Validate the check sum on the page.
@@ -1090,6 +1088,21 @@ public class StoredPage extends CachedPage
 	{
 		try 
         {
+            if (SanityManager.DEBUG) 
+            {
+                if (getRecordOffset(slot) <= 0)
+                {
+                    SanityManager.DEBUG_PRINT("DEBUG_TRACE",
+                        "getTotalSpace failed with getRecordOffset(" + 
+                        slot + ") = " +
+                        getRecordOffset(slot) + " must be greater than 0." +
+                        "page dump = \n" +
+                        toUncheckedString());
+                    SanityManager.THROWASSERT(
+                        "bad record offset found in getTotalSpace()");
+                }
+            }
+
             // A slot entry looks like the following:
             //     1st field:   offset of the record on the page
             //     2nd field:   length of the record on the page
@@ -2037,8 +2050,18 @@ public class StoredPage extends CachedPage
 	{
 		if (SanityManager.DEBUG) 
         {
-			SanityManager.ASSERT(getRecordOffset(slot) != 0);
-		}
+            if (getRecordOffset(slot) <= 0)
+            {
+                SanityManager.DEBUG_PRINT("DEBUG_TRACE",
+                    "getRecordPortionLength failed with getRecordOffset(" + 
+                    slot + ") = " +
+                    getRecordOffset(slot) + " must be greater than 0." +
+                    "page dump = \n" +
+                    toUncheckedString());
+                SanityManager.THROWASSERT(
+                    "bad record offset found in getRecordPortionLength()");
+            }
+        }
 
 		// these reads are always against the page array
 		ArrayInputStream lrdi = rawDataIn;
@@ -2066,8 +2089,18 @@ public class StoredPage extends CachedPage
 	{
 		if (SanityManager.DEBUG) 
         {
-			SanityManager.ASSERT(getRecordOffset(slot) != 0);
-		}
+            if (getRecordOffset(slot) <= 0)
+            {
+                SanityManager.DEBUG_PRINT("DEBUG_TRACE",
+                    "getReservedCount failed with getRecordOffset(" + 
+                    slot + ") = " +
+                    getRecordOffset(slot) + " must be greater than 0." +
+                    "page dump = \n" +
+                    toUncheckedString());
+                SanityManager.THROWASSERT(
+                    "bad record offset found in getReservedCount");
+            }
+        }
 
 		// these reads are always against the page array
 		ArrayInputStream lrdi = rawDataIn;
@@ -7971,6 +8004,25 @@ public class StoredPage extends CachedPage
 		else
 			return null;
 	}
+
+    public String toUncheckedString()
+    {
+        if (SanityManager.DEBUG)
+        {
+            String str = "---------------------------------------------------\n";
+            str += pageHeaderToString();
+
+            //if (SanityManager.DEBUG_ON("dumpPageImage"))
+            {
+                str += "---------------------------------------------------\n";
+                str += pagedataToHexDump(pageData);
+                str += "---------------------------------------------------\n";
+            }
+            return str;
+        }
+        else
+            return null;
+    }
 
     /**
      * Provide a hex dump of the data in the in memory version of the page.
