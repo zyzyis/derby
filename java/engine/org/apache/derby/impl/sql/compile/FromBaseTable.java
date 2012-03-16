@@ -4540,7 +4540,6 @@ public class FromBaseTable extends FromTable
 	}
 
 	private ConglomerateDescriptor getNextConglom(ConglomerateDescriptor currCD)
-		throws StandardException
 	{
 		int index = 0;
 
