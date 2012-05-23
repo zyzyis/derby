@@ -1,10 +1,10 @@
 <html lang="en">
-<title>Release Notes for Apache Derby 10.9.0.0</title>
+<title>Release Notes for Apache Derby 10.9.1.0</title>
 <body>
 <h1>
-<a name="Release Notes for Apache Derby 10.9.0.0"></a>Release Notes for Apache Derby 10.9.0.0</h1>
+<a name="Release Notes for Apache Derby 10.9.1.0"></a>Release Notes for Apache Derby 10.9.1.0</h1>
 <div>
-<p>These notes describe the difference between Apache Derby release 10.9.0.0 and the preceding release 10.8.2.2.</p>
+<p>These notes describe the difference between Apache Derby release 10.9.1.0 and the preceding release 10.8.2.2.</p>
 </div>
 <ul>
 <li>
@@ -105,13 +105,49 @@ This is a feature release. The following new features were added:
 <h2>
 <a name="Bug Fixes"></a>Bug Fixes</h2>
 <div>
-<p>The following issues are addressed by Derby release 10.9.0.0. These issues are not addressed in the preceding 10.8.2.2 release.</p>
+<p>The following issues are addressed by Derby release 10.9.1.0. These issues are not addressed in the preceding 10.8.2.2 release.</p>
 <table border="2">
 <tr>
 <td><b>Issue Id</b></td><td><b>Description</b></td>
 </tr>
 <tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5777">DERBY-5777</a></td><td>Update description of Maven artifact for the Derby net servlet to reflect that it is not intended for production use</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5776">DERBY-5776</a></td><td>test failure in iepnegativetests_ES with weme 6.2 (J2ME/CDC) with trunk (10.9 alpha) as of revision 1339441</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5774">DERBY-5774</a></td><td>Failures in UpdateStatisticsTest (order-dependent test cases)</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5771">DERBY-5771</a></td><td>Use TestNullOutputStream where possible</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5770">DERBY-5770</a></td><td>Reduce window of opportunity for queries being compiled without statistics on istat update</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5769">DERBY-5769</a></td><td>Notes deprecating BUILTIN authentication need fixing</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5768">DERBY-5768</a></td><td>Remove references to NATIVE::LOCAL from Derby error messages.</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5767">DERBY-5767</a></td><td>Remove mentions of NATIVE::LOCAL authentication provider setting</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5763">DERBY-5763</a></td><td>Reference Guide should note the new casing rules for the USERNAME arguments to the NATIVE procedures</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5760">DERBY-5760</a></td><td>Missing argument in some XJ022 errors</td>
+</tr>
+<tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5759">DERBY-5759</a></td><td>Add IndexStatsUtil.release(boolean closeConnection)</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5758">DERBY-5758</a></td><td>System procedures in Reference Manual should be alphabetized</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5756">DERBY-5756</a></td><td>Document new SYSCS_DROP_STATISTICS procedure</td>
 </tr>
 <tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5755">DERBY-5755</a></td><td>Minor cleanup of DataDictionaryImpl.getRoutineList()</td>
@@ -121,6 +157,15 @@ This is a feature release. The following new features were added:
 </tr>
 <tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5751">DERBY-5751</a></td><td>Make TriggerTest less hungry on heap space</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5749">DERBY-5749</a></td><td>Implicit cast of variable length values, e.g. as arguments to stored methods and generated columns values, silently truncate if too long</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5747">DERBY-5747</a></td><td>Native user authentication: Docs do not describe what happens to schema and its SQL objects on SYSCS_UTIL.SYSCS_DROP_USER call</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5746">DERBY-5746</a></td><td>Minor refactoring of DataDictionaryImpl.getSetAutoincrementValue</td>
 </tr>
 <tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5745">DERBY-5745</a></td><td>Remove unused local variables from DataDictionaryImpl</td>
@@ -246,10 +291,19 @@ This is a feature release. The following new features were added:
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5692">DERBY-5692</a></td><td>intermittent test failure in storetests/st_derby715.java</td>
 </tr>
 <tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5691">DERBY-5691</a></td><td>Document that  Write Caching  must be disabled to avoid possible database corruption</td>
+</tr>
+<tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5683">DERBY-5683</a></td><td>BaseJDBCTestCase.getDatabaseProperty() should close resources before returning</td>
 </tr>
 <tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5682">DERBY-5682</a></td><td>ProtocolTest failures: Unsupported encoding MacGreek</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5681">DERBY-5681</a></td><td>When a foreign key constraint on a table is dropped, the associated statistics row for the conglomerate is not removed</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5680">DERBY-5680</a></td><td>indexStat daemon processing tables over an over even when there are no changes in the tables</td>
 </tr>
 <tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5678">DERBY-5678</a></td><td>LocalizedDisplayScriptTest fails on JVMs that don't support EUC_JP encoding</td>
@@ -372,6 +426,12 @@ This is a feature release. The following new features were added:
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5596">DERBY-5596</a></td><td>TIMESTAMP doc gives wrong precision limitation</td>
 </tr>
 <tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5591">DERBY-5591</a></td><td>Imprecise wording in documentation in ref man on DROP VIEW</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5590">DERBY-5590</a></td><td>Document optional modifyThreadGroup permssion in java 2 security permissions</td>
+</tr>
+<tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5587">DERBY-5587</a></td><td>Due to licensing issues, fix or remove the monohtml docs posted on Derby's documentation page.</td>
 </tr>
 <tr>
@@ -391,6 +451,12 @@ This is a feature release. The following new features were added:
 </tr>
 <tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5567">DERBY-5567</a></td><td>AlterTableTest#testDropColumn fails: drop view cannot be performed due to dependency</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5566">DERBY-5566</a></td><td>CREATE SCHEMA should state that one cannot create a new schema starting with "SYS" in case normal form</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5565">DERBY-5565</a></td><td>Network Server should reject client connections that are not Derby Network Client</td>
 </tr>
 <tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5564">DERBY-5564</a></td><td>Code does different things depending if derby.locks.deadlockTrace=true is set</td>
@@ -480,7 +546,13 @@ This is a feature release. The following new features were added:
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5509">DERBY-5509</a></td><td>javadoc for NetServlet and NetworkServerControl are missing a few closing tags</td>
 </tr>
 <tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5508">DERBY-5508</a></td><td>Improve backup/restore documentation visibility and content to encourage proper backups and restore procedures</td>
+</tr>
+<tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5507">DERBY-5507</a></td><td>Orderly shutdown fails if you are using BUILTIN authentication and turn on derby.database.propertiesOnly</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5506">DERBY-5506</a></td><td>Document that EXISTS subquery can now select more then one column</td>
 </tr>
 <tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5505">DERBY-5505</a></td><td>BLOB and CLOB Reference Manual topics could use some fixes</td>
@@ -493,6 +565,9 @@ This is a feature release. The following new features were added:
 </tr>
 <tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5501">DERBY-5501</a></td><td>Subquery is only allowed to return a single column - When using derby with hibernate (or JPA) queries are created per JPA spec. For tables with multi-column PK, subqueries are created with two columns in select clause.</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5499">DERBY-5499</a></td><td>Document the new JDBC limit/offset escape syntax</td>
 </tr>
 <tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5498">DERBY-5498</a></td><td>ClosedByInterruptException in AuthenticationTest</td>
@@ -762,6 +837,9 @@ This is a feature release. The following new features were added:
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5090">DERBY-5090</a></td><td>Retrieving BLOB fields sometimes fails</td>
 </tr>
 <tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-5083">DERBY-5083</a></td><td>Document automatic update and creation of index cardinality statistics (istat)</td>
+</tr>
+<tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-5080">DERBY-5080</a></td><td>Utilize JQL to fetch JIRA issue list for release notes generation</td>
 </tr>
 <tr>
@@ -807,6 +885,9 @@ This is a feature release. The following new features were added:
 <td><a href="https://issues.apache.org/jira/browse/DERBY-4201">DERBY-4201</a></td><td>SecureServerTest AssertionFailedError: Timed out waiting for network server to start</td>
 </tr>
 <tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-4115">DERBY-4115</a></td><td>Provide a way to drop statistics information</td>
+</tr>
+<tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-4089">DERBY-4089</a></td><td>It should be possible to run unit tests right after "ant all"</td>
 </tr>
 <tr>
@@ -817,6 +898,9 @@ This is a feature release. The following new features were added:
 </tr>
 <tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-3808">DERBY-3808</a></td><td>Convert subquery.sql to junit</td>
+</tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-3790">DERBY-3790</a></td><td>Investigate if request for update statistics can be skipped for certain kind of indexes, one instance may be unique indexes based on one column.</td>
 </tr>
 <tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-3740">DERBY-3740</a></td><td>BlobClob4BlobTest.testLockingWithLongRowBlob fails with .AssertionFailedError: FAIL - statement should timeout</td>
@@ -857,13 +941,25 @@ This is a feature release. The following new features were added:
 <tr>
 <td><a href="https://issues.apache.org/jira/browse/DERBY-866">DERBY-866</a></td><td>Derby User Management Enhancements</td>
 </tr>
+<tr>
+<td><a href="https://issues.apache.org/jira/browse/DERBY-129">DERBY-129</a></td><td>Derby should throw a truncation error or warning when CASTing a parameter/constant to char or char for bit datatypes and the data is too large for the datatype.</td>
+</tr>
 </table>
 </div>
 <h2>
 <a name="Issues"></a>Issues</h2>
 <div>
-<p>Compared with the previous release (10.8.2.2), Derby release 10.9.0.0 introduces the following new features and incompatibilities. These merit your special attention.</p>
+<p>Compared with the previous release (10.8.2.2), Derby release 10.9.1.0 introduces the following new features and incompatibilities. These merit your special attention.</p>
 <ul>
+<li>
+<a href="#Note for DERBY-5749"><span>Note for DERBY-5749: Truncation as part of implicit or explicit cast is now reported,
+      either as exception or warning.</span></a>
+</li>
+<li>
+<a href="#Note for DERBY-5565"><span>Note for DERBY-5565: 
+Derby Network Server has been changed to reject client connections from clients that are not Derby Network Client  (Those that do not send PRDID starting with DNC).
+</span></a>
+</li>
 <li>
 <a href="#Note for DERBY-5564"><span>Note for DERBY-5564: 
   The SQL state of the error returned from a lock timeout when the property
@@ -903,12 +999,365 @@ or higher.
 </span></a>
 </li>
 <li>
+<a href="#Note for DERBY-1016"><span>Note for DERBY-1016: 
+Derby may throw an XAException with a different error code
+when clients call <i>javax.transaction.xa.XAResource.forget(Xid)</i>.
+</span></a>
+</li>
+<li>
 <a href="#Note for DERBY-866"><span>Note for DERBY-866: 
 This release introduces a new NATIVE authentication scheme which is
 easier to administer than BUILTIN authentication.
 </span></a>
 </li>
 </ul>
+<hr>
+<h3>
+<a name="Note for DERBY-5749"></a>Note for DERBY-5749</h3>
+<div>
+
+<!-- 
+  SUMMARIZE THE ISSUE. This is a one line summary of the issue.
+
+  For instance:
+
+  Applications may no longer open two InputStreams on the same ResultSet column.
+-->
+
+
+<h4>Summary of Change</h4>
+
+
+<p>Truncation as part of implicit or explicit cast is now reported,
+      either as exception or warning.</p>
+
+<!-- 
+  DESCRIBE WHAT IT IS THAT THE USER ACTUALLY SEES WHEN THE PROBLEM OCCURS.
+
+  For instance:
+
+  In the previous release, applications were able to open two
+  InputStreams on the same column. Depending on how these streams
+  interacted, the value siphoned out of the column was erratic. Now
+  Derby raises a SQLException when the application attempts to create
+  the second InputStream.
+-->
+
+
+<h4>Symptoms Seen by Applications Affected by Change</h4>
+
+
+<p>
+In previous releases, implicit and explict casts from a character or
+binary string data type to a shorter data type would silently truncate
+the value if the receiving data type was not wide enough to hold the
+original value.
+</p>
+
+
+<p>
+SQL now does correct checking of the length of character and binary
+strings, and will throw an exception in these two cases:
+</p>
+
+<ul>
+  
+<li>Arguments to stored procedures and functions</li>
+  
+<li>Values assigned to generated columns</li>
+
+</ul>
+
+<p>
+Previously, if the actual value was longer than the datatype of the
+argument or column to which it was assigned, Derby would silently
+truncate the value and ignore the truncation. The SQL standard
+requires a truncation exception be thrown.
+</p>
+
+<p>
+  Derby now throws an <code>SQLException</code> with SQL state <code>22001</code> in these cases:
+</p>
+
+
+<ul>
+  
+<li>Stored method calls that used to work, now throw <code>SQLException</code> with SQL state <code>22001</code>.</li>
+  
+<li>INSERT or UPDATE of tables with generated columns that used to
+  work, now throw <code>SQLException</code> with SQL state <code>22001</code>.</li>
+
+</ul>
+
+
+<p>
+For other cases of explicit or implicit casts of string data types
+where the value is truncated, Derby now generates
+a <code>DataTruncation</code> warning (sub-class
+of <code>SQLWarning</code>) with SQL state <code>01004</code>. The
+warning can be retrieved by calling <code>getWarnings()</code> on
+the <code>ResultSet</code> instance for SQL statements that return
+a <code>ResultSet</code>, or on the <code>Statement</code> instance
+for SQL statements that do not return a <code>ResultSet</code>.
+</p>
+
+<!-- 
+  OPTIONAL: DESCRIBE INCOMPATIBILITIES WITH PREVIOUS RELEASE, IF ANY.
+
+  For instance:
+
+  Applications which open two InputStreams on the ResultSet column now
+  fail.
+-->
+
+
+<h4>Incompatibilities with Previous Release</h4>
+
+<p>
+Applications that use too long string values as arguments for stored
+methods, or use tables with generated columns for which the generated
+value is longer than the type of the generated column, may now see
+exceptions.
+</p>
+
+
+<p>
+Applications that use implicit or explicit casts that truncate the
+value to make it fit in the receiving data type, may see warnings
+reported on the <code>ResultSet</code> or <code>Statement</code>.
+</p>
+
+<!-- 
+  DESCRIBE WHY THE CHANGE WAS MADE.
+
+  For instance:
+
+  The previous behavior violated the JDBC standard. The new behavior
+  is correct.
+-->
+
+
+<h4>Rationale for Change</h4>
+
+<p>
+The previous behavior could lead to inadvertent data loss, since the
+truncation was ignored. The previous behavior was not as per the SQL
+standard.
+</p>
+
+<!-- 
+  OPTIONAL: DESCRIBE HOW TO REVERT TO THE PREVIOUS BEHAVIOR OR
+  OTHERWISE AVOID THE INCOMPATIBILITIES INTRODUCED BY THIS CHANGE.
+
+  For instance:
+
+  Users must recode applications which open multiple streams on the same column.
+-->
+
+
+<h4>Application Changes Required</h4>
+
+<p>
+Applications should ensure that string values used as arguments to
+stored methods are within the range of the argument type.
+</p>
+
+<p>
+Applications should ensure that string values assigned to generated
+columns are within the range of the argument type.
+</p>
+
+
+<p>
+Example:
+</p>
+
+<pre lang="SQL">
+CREATE TABLE t_5749 (c VARCHAR(5) GENERATED ALWAYS
+       AS ('--' || b), b VARCHAR(5))
+INSERT INTO t_5749 VALUES (default, '12345')
+</pre>
+
+<p>
+The above code would work before, but silently truncate the generated
+value from '--12345' to '--123'. It will now throw <code>SQLException</code> with SQL state <code>22001</code>.
+</p>
+
+
+<p>
+If the old behavior is desired, the generation expression could be
+wrapped in a call to the <code>CAST</code> function:
+</p>
+
+
+<pre lang="SQL">
+CREATE TABLE t_5749 (c VARCHAR(5) GENERATED ALWAYS
+       AS (CAST('--' || b AS VARCHAR(5))), b VARCHAR(5))
+INSERT INTO t_5749 VALUES (default, '12345')
+</pre>
+
+
+<p>
+In that case, the INSERT statement would pass with no exceptions.
+Instead, the <code>Statement</code> instance on which it was executed
+will hold a <code>DataTruncation</code> warning with SQL
+state <code>01004</code>, which can be retrieved by
+calling <code>getWarnings()</code> on the <code>Statement</code>.
+</p>
+
+
+<p>
+Example:
+</p>
+
+<pre lang="Java">
+s.executeUpdate("create procedure p5749 (a varchar(5)) modifies sql data 
+    external name '...' language java parameter style java")
+CallableStatement cs = conn.prepareCall("call p5749(?)");
+cs.setString(1, "123456");
+cs.execute();
+</pre>
+
+<p>
+The above code would work before, but silently truncate the generated
+value from '123456' to '12345'. The <code>execute</code> will now throw <code>SQLException</code> with SQL state <code>22001</code>.
+</p>
+
+
+<p>
+As with the previous example, it is possible to wrap the parameter in
+an explicit cast and get a warning on
+the <code>CallableStatement</code> instead of an exception:
+</p>
+
+<pre lang="Java">
+CallableStatement cs = conn.prepareCall("call p5749(cast(? as varchar(5)))");
+cs.setString(1, "123456");
+cs.execute();
+</pre>
+
+
+</div>
+<hr>
+<h3>
+<a name="Note for DERBY-5565"></a>Note for DERBY-5565</h3>
+<div>
+
+<!-- 
+  SUMMARIZE THE ISSUE. This is a one line summary of the issue.
+
+  For instance:
+
+  Applications may no longer open two InputStreams on the same ResultSet column.
+-->
+
+
+<h4>Summary of Change</h4>
+
+<p>
+Derby Network Server has been changed to reject client connections from clients that are not Derby Network Client  (Those that do not send PRDID starting with DNC).
+</p>
+
+
+<!-- 
+  DESCRIBE WHAT IT IS THAT THE USER ACTUALLY SEES WHEN THE PROBLEM OCCURS.
+
+  For instance:
+
+  In the previous release, applications were able to open two
+  InputStreams on the same column. Depending on how these streams
+  interacted, the value siphoned out of the column was erratic. Now
+  Derby raises a SQLException when the application attempts to create
+  the second InputStream.
+-->
+
+
+<h4>Symptoms Seen by Applications Affected by Change</h4>
+
+<p>
+Upon attempting to connect to Derby from a client other than Derby Network Client, users will get an immediate error. On the server side they should see an Invalid client and protocol message in the derby.log, e.g: 
+</p>
+
+<code>
+ ERROR UNSUPPORTED CLIENT: Invalid client product id JCC03580, Derby Network Client (DNC) is the only supported client Product
+Thu May 17 09:32:32 PDT 2012 Thread[DRDAConnThread_11,5,derby.daemons] (DATABASE = mydb), (DRDAID = {2}), Execution failed because of a Distributed Protocol Error:  DRDA_Proto_SYNTAXRM; CODPNT arg  = 112e; Error Code Value = 14. Plaintext connection attempt from an SSL enabled client? 
+...
+</code>
+
+<p>
+On the client side users will receive a protocol error related to the SYNTAXRM required value not found error sent by the server. The error  will vary by connecting product. e.g. for the DB2 Universal JDBC Driver (JCC) this might be:
+</p>
+
+<code>
+Exception in thread "main" com.ibm.db2.jcc.am.jo: [jcc][t4][2034][11148][3.58.82] Execution failed due to a distribution
+ protocol error that caused deallocation of the conversation.
+A DRDA Data Stream Syntax Error was detected.  Reason: 0x112e. ERRORCODE=-4499, SQLSTATE=58009
+        at com.ibm.db2.jcc.am.ed.a(ed.java:321)
+        at com.ibm.db2.jcc.am.ed.a(ed.java:365)
+      ...
+</code>
+
+
+
+
+<!-- 
+  OPTIONAL: DESCRIBE INCOMPATIBILITIES WITH PREVIOUS RELEASE, IF ANY.
+
+  For instance:
+
+  Applications which open two InputStreams on the ResultSet column now
+  fail.
+-->
+
+
+<h4>Incompatibilities with Previous Release</h4>
+
+<p>
+Clients that are not Derby Network Client, such as the DB2 Runtime Client  and DB2 Universal JDBC driver will get a protocol error on connection on the client side and and a message that they are an Invalid Client in the derby.log. For prior releases the initial connection may have succeded giving the false impression that these were supported and would work in all cases.
+
+</p>
+
+
+<!-- 
+  DESCRIBE WHY THE CHANGE WAS MADE.
+
+  For instance:
+
+  The previous behavior violated the JDBC standard. The new behavior
+  is correct.
+-->
+
+
+<h4>Rationale for Change</h4>
+
+<p>
+There are currently no known supported network clients for Derby Network Server other than Derby Network Client. IBM support for the DB2 clients was discontinued after Derby 10.1.  This change will avoid user confusion about support by ensuring  that connections from non-supported clients to newer versions of Derby Network Server fail immediately and give an indication of the reason  in the derby.log. 
+
+
+</p>
+
+
+<!-- 
+  OPTIONAL: DESCRIBE HOW TO REVERT TO THE PREVIOUS BEHAVIOR OR
+  OTHERWISE AVOID THE INCOMPATIBILITIES INTRODUCED BY THIS CHANGE.
+
+  For instance:
+
+  Users must recode applications which open multiple streams on the same column.
+-->
+
+
+<h4>Application Changes Required</h4>
+
+<p>
+
+Applications should be modified to use Derby Network Client or if a non-Derby client is being developed, developers should submit a patch for Derby Network Server to accept the appropriate PRDID.
+
+</p>
+
+
+
+</div>
 <hr>
 <h3>
 <a name="Note for DERBY-5564"></a>Note for DERBY-5564</h3>
@@ -1425,6 +1874,64 @@ or higher.  This work will not affect any triggers in databases running in soft 
 </div>
 <hr>
 <h3>
+<a name="Note for DERBY-1016"></a>Note for DERBY-1016</h3>
+<div>
+
+
+<h4>Summary of Change</h4>
+
+<p>
+Derby may throw an XAException with a different error code
+when clients call <i>javax.transaction.xa.XAResource.forget(Xid)</i>.
+</p>
+
+
+<h4>Symptoms Seen by Applications Affected by Change. </h4>
+
+<p>
+In previous releases, when clients called
+<i>javax.transaction.xa.XAResource.forget(Xid)</i> with an active
+transaction id, Derby raised an
+XAException with the XAER_NOTA error code.
+According to the XA+ standard, this error code
+is valid only for a heuristically completed transaction branch. Derby
+doesn't support heuristically completed transaction branches. In this
+situation, the
+correct error code is XAER_PROTO.
+</p>
+
+
+<h4>Incompatibilities with Previous Release</h4>
+
+<p>
+In this release, calling
+<i>javax.transaction.xa.XAResource.forget(Xid)</i> with an active
+transaction id causes Derby to
+throw an XAException whose error code is XAER_PROTO.
+</p>
+
+
+<h4>Rationale for Change</h4>
+
+<p>
+Derby's behavior was changed in order to conform with the XA+ Standard.
+
+</p>
+
+
+<h4>Application Changes Required</h4>
+
+<p>
+Applications which look for the XAER_NOTA error code after calling
+<i>javax.transaction.xa.XAResource.forget(Xid)</i> with an active
+transaction id should be re-coded to look for
+the XAER_PROTO error code instead.
+</p>
+
+
+</div>
+<hr>
+<h3>
 <a name="Note for DERBY-866"></a>Note for DERBY-866</h3>
 <div>
 
@@ -1538,7 +2045,7 @@ up. NATIVE authentication should be enabled.</li>
 <h2>
 <a name="Build Environment"></a>Build Environment</h2>
 <div>
-<p>Derby release 10.9.0.0 was built using the following environment:</p>
+<p>Derby release 10.9.1.0 was built using the following environment:</p>
 <ul>
 <li>
 <b>Branch</b> - Source code came from the 10.9 branch.</li>
