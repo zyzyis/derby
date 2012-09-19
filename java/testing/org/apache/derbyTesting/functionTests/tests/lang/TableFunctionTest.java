@@ -83,6 +83,45 @@ public class TableFunctionTest extends BaseJDBCTestCase
         { "the", "bop" },
         { (String) null, "in" },
         { "the", (String) null },
+    };    
+    
+    private static  final   String[][] SIMPLY_ROWS =
+    {
+        { "the       ", (String) null },
+        { "the       ", "bop       " },
+        { "who       ", "put       " }, 
+        { (String) null, "in        " },
+    };
+    
+    private static  final   String[][]  DOUBLY_SIMPLE_ROWS =
+    {
+        { "the       ", (String) null },
+        { "the       ", "bop       " },
+        { "the       ", (String) null },
+        { "the       ", "bop       " },
+        { "who       ", "put       " },
+        { "who       ", "put       " },
+        { (String) null, "in        " },
+        { (String) null, "in        " },
+    };
+
+    private static  final   String[][]  BULK_INSERT_ROWS =
+    {
+        { "1", "red" },
+        { "2", "blue" },
+    };
+    
+    private static final    String[][] BULK_INSERT_SELF_JOIN_ROWS =
+    {
+        { "2", "blue" },
+    };
+    
+    private static  final   String[][]  DOUBLY_INSERTED_ROWS =
+    {
+        { "1", "red" },
+        { "1", "red" },
+        { "2", "blue" },
+        { "2", "blue" },
     };
     
     private static  final   String[][]  ALL_TYPES_ROWS =
@@ -926,6 +965,8 @@ public class TableFunctionTest extends BaseJDBCTestCase
 
         coercionTest();
 
+        bulkInsert();
+        
         miscBugs();
     }
     
@@ -1128,6 +1169,205 @@ public class TableFunctionTest extends BaseJDBCTestCase
          );        
     }
     
+    /**
+     * Verify bulk insert using a VTI
+     */
+    private void  bulkInsert()
+        throws Exception
+    {
+        Connection conn = getConnection();
+        
+        goodStatement
+            (
+             "create table bulkInsertTable\n" +
+             "  (\n" +
+             "     column0 int,\n" +
+             "     column1 varchar( 10 )\n" +
+             "  )\n"
+             );
+        goodStatement
+            (
+             "create table biSourceTable\n" +
+             "  (\n" +
+             "     column0 int,\n" +
+             "     column1 varchar( 10 )\n" +
+             "  )\n"
+             );
+        goodStatement
+            (
+             "create function bulkInsertVTI()\n" +
+             "returns TABLE\n" +
+             "  (\n" +
+             "     column0 int,\n" +
+             "     column1 varchar( 10 )\n" +
+             "  )\n" +
+             "language java\n" +
+             "parameter style DERBY_JDBC_RESULT_SET\n" +
+             "no sql\n" +
+             "external name '" + getClass().getName() + ".bulkInsertVTI'\n"
+             );
+        goodStatement
+            (
+             "create view bulkInsertView( column0, column1 ) as select column0, column1\n" +
+             "from table( bulkInsertVTI() ) s\n"
+             );
+        goodStatement
+            (
+             "insert into biSourceTable select * from bulkInsertView\n"
+             );
+        //Test table with null value on bulk insert
+        goodStatement
+        (
+         "create table bulkInsertSimpleTable\n" +
+         "  (\n" +
+         "     column0 varchar( 10 ),\n" +
+         "     column1 varchar( 10 )\n" +
+         "  )\n"
+         );
+
+        //
+        // Inserting from a table function into an empty table should trigger
+        // the bulk-insert optimization, resulting in a new conglomerate for
+        // the target table
+        //
+        // Inserting from a table function into a non-empty table should NOT trigger
+        // the bulk-insert optimization. The conglomerate number of the target table
+        // should not change.
+        //
+
+        vetBulkInsert
+            (
+             conn,
+             "insert into bulkInsertTable select * from table( bulkInsertVTI() ) s",
+             true
+             );
+
+        // You still get bulk-insert if you wrap the table function in a view
+        vetBulkInsert
+            (
+             conn,
+             "insert into bulkInsertTable select * from bulkInsertView",
+             true
+             );
+        // You still get bulk-insert if it is a union that wrap a table
+        // function
+        vetBulkInsert
+            (
+             conn,
+             "insert into bulkInsertTable select * from table( bulkInsertVTI() ) s union select * from table (bulkInsertVTI()) t",
+             true
+             );
+        // You still get bulk-insert if it is a table function wrap subquery
+        vetBulkInsert
+            (
+             conn,
+             "insert into bulkInsertTable select * from table( bulkInsertVTI()) b where b.column0 in (select c.column0 from table( bulkInsertVTI()) c)",
+             true
+             );
+        // You still get bulk-insert if it is a self join that wrap a table
+        // function in a view
+        goodStatement("delete from bulkInsertTable");
+        vetBulkInsert
+            (
+             conn,
+             "insert into bulkInsertTable select * from bulkInsertView b where 1 = (select count(*) from bulkInsertView bc where b.column0 > bc.column0)",
+             true,
+             BULK_INSERT_SELF_JOIN_ROWS
+             );
+        // You don't get bulk-insert if you insert from an ordinary table
+        vetBulkInsert
+            (
+             conn,
+             "insert into bulkInsertTable select * from biSourceTable",
+             false
+             );
+        vetBulkInsert
+        (
+         conn,
+         "insert into bulkInsertTable select * from table( bulkInsertVTI() ) s",
+         true
+         );
+        // You still get bulk-insert if you wrap the table function in a view
+        vetBulkInsertSimple
+        (
+         conn,
+         "insert into bulkInsertSimpleTable select * from table(RETURNSACOUPLEROWSASCHAR()) r",
+         true
+         );
+         // You still get bulk-insert if it is a union that wrap a table
+         // function
+        vetBulkInsertSimple
+        (
+         conn,
+         "insert into bulkInsertSimpleTable select * from table( RETURNSACOUPLEROWSASCHAR() ) s union select * from table ( RETURNSACOUPLEROWSASCHAR() ) t",
+         true
+         );
+         // You still get bulk-insert if it is a table function wrap subquery
+        vetBulkInsertSimple
+        (
+         conn,
+         "insert into bulkInsertSimpleTable select c.column0, c.column1 from table( RETURNSACOUPLEROWSASCHAR() ) c left outer join (select * from table( RETURNSACOUPLEROWSASCHAR() ) d) e on c.column0 = e.column0 and c.column1 = e.column1",
+         true
+         );
+    }
+    private void vetBulkInsert( Connection conn, String insert, boolean bulkInsertExpected )
+        throws Exception
+    {
+        goodStatement( "delete from bulkInsertTable" );
+
+        vetBulkInsert( conn, insert, bulkInsertExpected, BULK_INSERT_ROWS );
+
+        //
+        // Inserting from a table function into a non-empty table should NOT trigger
+        // the bulk-insert optimization. The conglomerate number of the target table
+        // should not change.
+        //
+        vetBulkInsert( conn, insert, false, DOUBLY_INSERTED_ROWS );
+    }
+    private void vetBulkInsert( Connection conn, String insert, boolean bulkInsertExpected, String[][] expectedRows )
+        throws Exception
+    {
+        long originalConglomerateID = getConglomerateID( conn, "BULKINSERTTABLE" );
+        goodStatement( insert );
+        long conglomerateIDAfterInsert = getConglomerateID( conn, "BULKINSERTTABLE" );
+        
+        assertEquals( bulkInsertExpected, originalConglomerateID != conglomerateIDAfterInsert );
+        assertResults
+            (
+             "select * from bulkInsertTable order by column0",
+             expectedRows,
+             new int[] { Types.INTEGER, Types.VARCHAR }
+             );
+    }
+    private void vetBulkInsertSimple( Connection conn, String insert, boolean bulkInsertSimpleExpected )
+    throws Exception
+    {
+    goodStatement( "delete from bulkInsertSimpleTable" );
+
+    vetBulkInsertSimple( conn, insert, bulkInsertSimpleExpected, SIMPLY_ROWS );
+
+    //
+    // Inserting from a table function into a non-empty table should NOT triOgger
+    // the bulk-insert optimization. The conglomerate number of the target table
+    // should not change.
+    //
+    vetBulkInsertSimple( conn, insert, false, DOUBLY_SIMPLE_ROWS );
+    }
+    private void vetBulkInsertSimple( Connection conn, String insert, boolean bulkInsertSimpleExpected, String[][] expectedRows )
+    throws Exception
+    {
+    long originalConglomerateID = getConglomerateID( conn, "BULKINSERTSIMPLETABLE" );
+    goodStatement( insert );
+    long conglomerateIDAfterInsert = getConglomerateID( conn, "BULKINSERTSIMPLETABLE" );
+    
+    assertEquals( bulkInsertSimpleExpected, originalConglomerateID != conglomerateIDAfterInsert );
+    assertResults
+        (
+         "select * from bulkInsertSimpleTable order by column0",
+         expectedRows,
+         new int[] { Types.VARCHAR, Types.VARCHAR }
+         );
+     }
     /**
      * Verify that Derby handles VTI columns of all known datatypes.
      */
@@ -1755,6 +1995,14 @@ public class TableFunctionTest extends BaseJDBCTestCase
     }
 
     /**
+     * A VTI for use in bulk insert
+     */
+    public  static  ResultSet bulkInsertVTI()
+    {
+        return makeVTI( BULK_INSERT_ROWS );
+    }
+
+    /**
      * A VTI which returns rows having columns of all legal datatypes.
      */
     public  static  ResultSet returnsAllLegalDatatypes( int intArg, String varcharArg )
@@ -2093,7 +2341,7 @@ public class TableFunctionTest extends BaseJDBCTestCase
                     fail( "Can't handle jdbc type " + actualJdbcType );
                 }
 
-                println( "Comparing " + expectedValue + " to " + actualValue + " and " + actualValueByName );
+                //println( "Comparing " + expectedValue + " to " + actualValue + " and " + actualValueByName );
 
                 if ( actualValue == null ) { assertNull( actualValueByName ); }
                 else { assertTrue( actualValue.equals( actualValueByName ) ); }
@@ -2285,6 +2533,37 @@ public class TableFunctionTest extends BaseJDBCTestCase
         }
 
         return 0.0;
+    }
+
+    /** Get the conglomerate id of a table */
+    private long getConglomerateID( Connection conn, String tableName ) throws Exception
+    {
+        PreparedStatement ps = conn.prepareStatement
+            (
+             "select c.conglomeratenumber\n" +
+             "from sys.sysconglomerates c, sys.systables t\n" +
+             "where t.tablename = ? and t.tableid = c.tableid"
+             );
+        ps.setString( 1, tableName );
+
+        long result = getScalarLong( ps );
+
+        ps.close();
+
+        return result;
+    }
+
+    /** Get a scalar long result from a query */
+    private long getScalarLong( PreparedStatement ps ) throws Exception
+    {
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        long retval = rs.getLong( 1 );
+
+        rs.close();
+        ps.close();
+
+        return retval;
     }
 
 }
