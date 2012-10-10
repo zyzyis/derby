@@ -2048,4 +2048,16 @@ public final class TestConfiguration {
     {
         return getPassword(user, passwordToken);
     }
+
+    public final String getDatabasePath(String physicalDatabaseName)
+    {
+        String dbName = physicalDatabaseName.replace('/', File.separatorChar);
+        String dsh = BaseTestCase.getSystemProperty("derby.system.home");
+        if (dsh == null) {
+            Assert.fail("not implemented");
+        } else {
+            dbName = dsh + File.separator + dbName;
+        }
+        return dbName;
+    }
 }
