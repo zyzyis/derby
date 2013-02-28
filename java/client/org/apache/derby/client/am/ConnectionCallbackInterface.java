@@ -55,7 +55,7 @@ public interface ConnectionCallbackInterface {
     /**
      * Completes piggy-backing of the new current schema by updating
      * the cached copy in am.Connection.
-     * @param pbSchema new current schema from the server
+     * @param pbSchema new current schema from the server 
      */
     public void completePiggyBackSchema(String pbSchema);
 }
