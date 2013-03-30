@@ -42,6 +42,7 @@ import org.apache.derby.drda.NetworkServerControl;
 import org.apache.derbyTesting.functionTests.util.PrivilegedFileOpsForTests;
 import org.apache.derbyTesting.junit.BaseJDBCTestCase;
 import org.apache.derbyTesting.junit.Derby;
+import org.apache.derbyTesting.junit.JDBC;
 import org.apache.derbyTesting.junit.NetworkServerTestSetup;
 import org.apache.derbyTesting.junit.TestConfiguration;
 
@@ -326,17 +327,19 @@ public class DerbyNetAutoStartTest extends BaseJDBCTestCase {
     } // end of checkLog
 
     public static Test suite() {
-        TestSuite suite = new TestSuite("DerbyNetAutoStartTest");
-        suite.addTest(baseSuite("DerbyNetAutoStartTest:embedded"));
-        return suite;
+        // Need derbynet.jar in the classpath, 
+        // and cannot run with ME/JSR169/cdc profile
+        if (JDBC.vmSupportsJDBC3() && Derby.hasServer()) {
+        	TestSuite suite = new TestSuite("DerbyNetAutoStartTest");
+        	suite.addTest(baseSuite("DerbyNetAutoStartTest:embedded"));
+        	return suite;
+        } else {
+            return new TestSuite("DerbyNetAutoStartTest.empty");
+        }
     }
 
     private static Test baseSuite(String name) {
-
         TestSuite suite = new TestSuite(name);
-        // Need derbynet.jar in the classpath, and cannot run with ME/JSR169/cdc profile
-        if (!Derby.hasServer())
-            return suite;
         // Adds all tests that can run with baseport set or not.
         suite.addTestSuite(DerbyNetAutoStartTest.class);
         if (getSystemProperty("derby.tests.basePort") != null )
