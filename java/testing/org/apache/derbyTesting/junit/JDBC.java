@@ -128,6 +128,17 @@ public class JDBC {
         HAVE_AUTO_CLOSEABLE_RESULT_SET = autoCloseable;
     }
 
+    private static final boolean HAVE_SQLTYPE;
+    static {
+        boolean ok = false;
+        try {
+            Class.forName("java.sql.SQLType");
+            ok = true;
+        } catch (Throwable t) {
+        }
+        HAVE_SQLTYPE = ok;
+    }
+    
     /**
      * Can we load a specific class, use this to determine JDBC level.
      * @param className Class to attempt load on.
@@ -141,6 +152,14 @@ public class JDBC {
         } catch (Throwable e) {
         	return false;
         }    	
+    }
+
+    /**
+     * Return true if the virtual machine environment supports JDBC 4.2 or
+     * later.
+     */
+    public static boolean vmSupportsJDBC42() {
+        return vmSupportsJDBC41() && HAVE_SQLTYPE;
     }
 
     /**
