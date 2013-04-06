@@ -223,6 +223,7 @@ public class _Suite extends BaseTestCase  {
         suite.addTest(NativeAuthenticationServiceTest.suite());
         suite.addTest(Derby5652.suite());
         suite.addTest(QueryPlanTest.suite());
+        suite.addTest(Derby6131.suite());
         return suite;
 	}
 }
