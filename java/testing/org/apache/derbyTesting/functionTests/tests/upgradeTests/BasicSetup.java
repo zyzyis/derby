@@ -46,8 +46,17 @@ public class BasicSetup extends UpgradeChange {
     
     public static Test suite() {
         TestSuite suite = new TestSuite("Upgrade basic setup");
-        
-        suite.addTestSuite(BasicSetup.class);
+
+        // Make the test cases run in a fixed order so they become
+        // more deterministic. Some orderings may make them run into
+        // problems in old versions. Since it's too late to fix bugs
+        // in old versions, we have to work around them like this
+        // instead.
+        //
+        // Specifically, some test orderings may cause the test to
+        // run into DERBY-4577, which could prevent booting of the
+        // database in the upgrade phase.
+        suite.addTest(TestConfiguration.orderedSuite(BasicSetup.class));
 
         if (XML.classpathMeetsXMLReqs()) {
             // Only test XML operators if they are supported by the version
