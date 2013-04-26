@@ -1015,6 +1015,7 @@ public final class Predicate extends QueryTreeNode implements OptimizablePredica
 					parentRSNsTables,
 					childRSN,
 					whichRC),
+					Boolean.valueOf(opNode.getForQueryRewrite()),
 				getContextManager());
 
 		// Bind the new op node.

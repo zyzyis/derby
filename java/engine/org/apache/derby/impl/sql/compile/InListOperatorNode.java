@@ -145,6 +145,7 @@ public final class InListOperatorNode extends BinaryListOperatorNode
 						C_NodeTypes.BINARY_EQUALS_OPERATOR_NODE,
 						leftOperand, 
 						(ValueNode) rightOperandList.elementAt(0),
+						Boolean.FALSE,
 						getContextManager());
 			/* Set type info for the operator node */
 			equal.bindComparisonOperator();
@@ -284,6 +285,7 @@ public final class InListOperatorNode extends BinaryListOperatorNode
 							C_NodeTypes.BINARY_EQUALS_OPERATOR_NODE,
 							leftOperand, 
 							minValue,
+							Boolean.FALSE,
 							getContextManager());
 					/* Set type info for the operator node */
 					equal.bindComparisonOperator();
@@ -353,6 +355,7 @@ public final class InListOperatorNode extends BinaryListOperatorNode
 					leftOperand, 
 					pNode,
 					this,
+					Boolean.FALSE,
 					getContextManager());
 
 			/* Set type info for the operator node */
@@ -422,6 +425,7 @@ public final class InListOperatorNode extends BinaryListOperatorNode
 						C_NodeTypes.BINARY_NOT_EQUALS_OPERATOR_NODE,
 						leftClone,
 						(ValueNode) rightOperandList.elementAt(0),
+						Boolean.FALSE,
 						getContextManager());
 		/* Set type info for the operator node */
 		leftBCO.bindComparisonOperator();
@@ -438,6 +442,7 @@ public final class InListOperatorNode extends BinaryListOperatorNode
 							C_NodeTypes.BINARY_NOT_EQUALS_OPERATOR_NODE,
 							leftClone,
 							(ValueNode) rightOperandList.elementAt(elemsDone),
+							Boolean.FALSE,
 							getContextManager());
 			/* Set type info for the operator node */
 			rightBCO.bindComparisonOperator();

@@ -1584,6 +1584,7 @@ public class PredicateList extends QueryTreeNodeVector implements OptimizablePre
 										newCRNode,
 										opNode.getRightOperand(),
 										inNode,
+										Boolean.valueOf(opNode.getForQueryRewrite()),
 										getContextManager());
 					newRelop.bindComparisonOperator();
 					leftOperand = newRelop;
@@ -2172,6 +2173,7 @@ public class PredicateList extends QueryTreeNodeVector implements OptimizablePre
 										C_NodeTypes.BINARY_EQUALS_OPERATOR_NODE,
 										outerCR.getClone(),
 										innerCR.getClone(),
+										Boolean.FALSE,
 										getContextManager());
 					newEquals.bindComparisonOperator();
 					/* Create the AND */
