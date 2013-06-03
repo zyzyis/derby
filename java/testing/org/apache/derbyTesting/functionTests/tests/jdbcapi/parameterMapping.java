@@ -3049,8 +3049,8 @@ public class parameterMapping {
 	}
 	
 	//numberOfRowsToUpdate - value 1 or 2
-	//testVariation - if 1 then update CLOB with short data
-	//                if 2 then update CLOB with large data
+	//testVariation - if 1 then update CLOB/VARCHAR with short data
+	//                if 2 then update CLOB/VARCHAR with large data
     //testCLOB - true means test setCharacterStream on CLOB
     //         - false means test setCharacterStream on VARCHAR
 	private static void helperTestDerby6237(int numberOfRowsToUpdate, 
@@ -3198,12 +3198,16 @@ public class parameterMapping {
         helperTestDerby6237(1,2,conn, testCLOB);
         //update two rows and use short data
         //Once DERBY-6237 is fixed, we should remove following if condition
+        // Following if condition will skip the test for 2 row update when
+        //  testing CLOB columns in embedded with short data. This results 
+        //  in failure in 10.2
         if (!(testCLOB && TestUtil.isEmbeddedFramework()))
             helperTestDerby6237(2,1,conn, testCLOB);
         //update two rows and use large data
         //Once DERBY-6237 is fixed, we should remove following if condition
         // Following if condition will skip the test for 2 row update when
-        //  testing CLOB columns. This results in failure in 10.2
+        //  testing CLOB columns in embedded with large data. This results 
+        //  in failure in 10.2
         if (!(testCLOB && TestUtil.isEmbeddedFramework()))
             helperTestDerby6237(2,2,conn, testCLOB);
 
