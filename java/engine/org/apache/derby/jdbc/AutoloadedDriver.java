@@ -27,14 +27,16 @@ import java.sql.Connection;
 import java.sql.DriverPropertyInfo;
 import java.sql.SQLException;
 
-import java.io.PrintStream;
+import java.security.AccessControlException;
+import java.security.AccessController;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
 import java.util.Properties;
 
 import org.apache.derby.iapi.reference.MessageId;
-import org.apache.derby.iapi.reference.Attribute;
 import org.apache.derby.iapi.services.i18n.MessageService;
 import org.apache.derby.iapi.services.sanity.SanityManager;
-import org.apache.derby.iapi.jdbc.JDBCBoot;
+import org.apache.derby.iapi.services.monitor.Monitor;
 
 
 /**
@@ -62,7 +64,7 @@ public class AutoloadedDriver implements Driver
 	
 
     // This is the driver that memorizes the autoloadeddriver (DERBY-2905)
-    private static Driver _autoloadedDriver;
+    private static AutoloadedDriver _autoloadedDriver;
 
     // This flag is true unless the deregister attribute has been set to
     // false by the user (DERBY-2905)
@@ -249,20 +251,47 @@ public class AutoloadedDriver implements Driver
         try {
             // deregister is false if user set deregister=false attribute (DERBY-2905)
             if (deregister && _autoloadedDriver != null) {
-                DriverManager.deregisterDriver(_autoloadedDriver);
+                deregisterDriver(_autoloadedDriver);
                 _autoloadedDriver = null;
-            } else {
-                DriverManager.deregisterDriver(_driverModule);
-                //DERBY 5085, need to restore the default value
-                deregister = true;
             }
+
+            // DERBY-5085, need to restore the default value
+            deregister = true;
+
             _driverModule = null;
         } catch (SQLException e) {
             if (SanityManager.DEBUG)
                 SanityManager.THROWASSERT(e);
         }
 	}
-	
+
+    private static void deregisterDriver(final AutoloadedDriver driver)
+            throws SQLException {
+        // DERBY-6224: DriverManager.deregisterDriver() requires a special
+        // permission in JDBC 4.2 and later. Call it in a privileged block
+        // so that the permission doesn't have to be granted to code that
+        // invokes engine shutdown.
+        try {
+            AccessController.doPrivileged(
+                    new PrivilegedExceptionAction() {
+                public Object run() throws SQLException {
+                    // Requires SQLPermission("deregisterDriver")
+                    DriverManager.deregisterDriver(driver);
+                    return null;
+                }
+            });
+        } catch (PrivilegedActionException pae) {
+            throw (SQLException) pae.getCause();
+        } catch (AccessControlException ace) {
+            // Since no permission was needed for deregisterDriver() before
+            // Java 8, applications may be surprised to find that engine
+            // shutdown fails because of it. For backward compatibility,
+            // don't fail shutdown if the permission is missing. Instead,
+            // log a message saying the driver could not be deregistered.
+            Monitor.logTextMessage(MessageId.CONN_DEREGISTER_NOT_PERMITTED);
+            Monitor.logThrowable(ace);
+        }
+    }
 
 	/*
 	** Return true if the engine has been booted.

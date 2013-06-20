@@ -24,6 +24,7 @@ package org.apache.derbyTesting.functionTests.tests.engine;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import org.apache.derbyTesting.junit.BaseTestCase;
+import org.apache.derbyTesting.junit.JDBC;
 
 /**
  * Suite to run all JUnit tests in this package:
@@ -49,6 +50,10 @@ public class _Suite extends BaseTestCase  {
         suite.addTest(ErrorStreamTest.suite());
         suite.addTest(LockInterruptTest.suite());
         suite.addTest(ModuleLoadingTest.suite());
+        if (JDBC.vmSupportsJDBC3()) {
+            // Test that requires DriverManager.
+            suite.addTest(ShutdownWithoutDeregisterPermissionTest.suite());
+        }
 
         return suite;
     }
