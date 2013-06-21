@@ -65,7 +65,7 @@
     <mkdir dir="${out.dir}/${derby.testing.functest.dir}/tests/engine"/>
   </target>
 
-  <target name="compilet1" depends="compile_jdk14">
+  <target name="compilet1" depends="compile_java5">
      <javac
         source="1.4"
         target="1.4"
@@ -88,10 +88,10 @@
      </javac>
   </target>
 
-  <target name="compile_jdk14">
+  <target name="compile_java5">
      <javac
-        source="1.4"
-        target="1.4"
+        source="1.5"
+        target="1.5"
         bootclasspath="${empty}"
         nowarn="on"
         debug="true"
@@ -103,7 +103,7 @@
         srcdir="${derby.testing.src.dir}"
         destdir="${out.dir}">
         <classpath>
-           <pathelement path="${java14compile.classpath}"/>
+           <pathelement path="${java15compile.classpath}"/>
            <pathelement path="${junit}"/>
         </classpath>
         <include name="${this.dir}/ShutdownWithoutDeregisterPermissionTest.java"/>
