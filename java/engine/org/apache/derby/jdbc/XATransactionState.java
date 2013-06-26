@@ -23,7 +23,6 @@ package org.apache.derby.jdbc;
 
 
 import java.sql.SQLException;
-import java.util.Timer;
 import java.util.TimerTask;
 import org.apache.derby.iapi.services.monitor.Monitor;
 import org.apache.derby.iapi.services.timer.TimerFactory;
@@ -120,7 +119,9 @@ final class XATransactionState extends ContextImpl {
         }
     }
 
-
+    private static TimerFactory getTimerFactory() {
+        return Monitor.getMonitor().getTimerFactory();
+    }
 
 	XATransactionState(ContextManager cm, EmbedConnection conn, 
                 EmbedXAResource resource, XAXactId xid) {
@@ -315,7 +316,7 @@ final class XATransactionState extends ContextImpl {
 	}
 
    /**
-    * Schedule a timeout task wich will rollback the global transaction
+    * Schedule a timeout task which will rollback the global transaction
     * after the specified time will elapse.
     *
     * @param timeoutMillis The number of milliseconds to be elapsed before
@@ -327,10 +328,8 @@ final class XATransactionState extends ContextImpl {
         // schedule a time out task if the timeout was specified
         if (timeoutMillis > 0) {
             // take care of the transaction timeout
-            TimerFactory timerFactory = Monitor.getMonitor().getTimerFactory();
-            Timer timer = timerFactory.getCancellationTimer();
             timeoutTask = new CancelXATransactionTask(this);
-            timer.schedule(timeoutTask, timeoutMillis);
+            getTimerFactory().schedule(timeoutTask, timeoutMillis);
         } else {
             timeoutTask = null;
         }
@@ -375,7 +374,7 @@ final class XATransactionState extends ContextImpl {
       */
     private void xa_finalize() {
         if (timeoutTask != null) {
-            timeoutTask.cancel();
+            getTimerFactory().cancel(timeoutTask);
             timeoutTask = null;
         }
         performTimeoutRollback = false;

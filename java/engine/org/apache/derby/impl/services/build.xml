@@ -59,6 +59,7 @@
       <exclude name="${derby.dir}/impl/services/cache/*Policy.java"/>
       <exclude name="${derby.dir}/impl/services/cache/BackgroundCleaner.java"/>
       <exclude name="${derby.dir}/impl/services/jmx/**"/>
+      <exclude name="${derby.dir}/impl/services/timer/Java5*"/>
     </javac>
  </target>
  
@@ -86,6 +87,7 @@
      <include name="${derby.dir}/impl/services/cache/*Policy.java"/>
      <include name="${derby.dir}/impl/services/cache/BackgroundCleaner.java"/>
    	 <include name="${derby.dir}/impl/services/jmx/**"/>
+     <include name="${derby.dir}/impl/services/timer/Java5*"/>
    </javac>
  </target>
 
