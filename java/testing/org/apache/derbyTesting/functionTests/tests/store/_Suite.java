@@ -73,6 +73,7 @@ public class _Suite extends BaseTestCase  {
         suite.addTest(AutomaticIndexStatisticsTest.suite());
         suite.addTest(Derby5582AutomaticIndexStatisticsTest.suite());
         suite.addTest(Derby5234Test.suite());
+        suite.addTest(KeepDisposableStatsPropertyTest.suite());
         suite.addTest(AutomaticIndexStatisticsMultiTest.suite());
         suite.addTest(BTreeMaxScanTest.suite());
         suite.addTest(MadhareTest.suite());

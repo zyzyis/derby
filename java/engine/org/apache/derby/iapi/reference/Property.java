@@ -711,6 +711,12 @@ public interface Property {
             "derby.storage.indexStats.debug.queueSize";
     int STORAGE_AUTO_INDEX_STATS_DEBUG_QUEUE_SIZE_DEFAULT = 20;
 
+    /**
+     * Specifies whether to revert to 10.8 behavior and keep disposable stats.
+     */
+    String STORAGE_AUTO_INDEX_STATS_DEBUG_KEEP_DISPOSABLE_STATS =
+            "derby.storage.indexStats.debug.keepDisposableStats";
+
 	/*
 	** Transactions
 	*/
