@@ -73,7 +73,9 @@ public class _Suite extends BaseTestCase  {
         suite.addTest(AutomaticIndexStatisticsTest.suite());
         suite.addTest(Derby5582AutomaticIndexStatisticsTest.suite());
         suite.addTest(Derby5234Test.suite());
-        suite.addTest(KeepDisposableStatsPropertyTest.suite());
+        //following test is meant for DERBY-3790 which is not in in 10.8
+        // codeline and hence should not be run
+//        suite.addTest(KeepDisposableStatsPropertyTest.suite());
         suite.addTest(AutomaticIndexStatisticsMultiTest.suite());
         suite.addTest(BTreeMaxScanTest.suite());
         suite.addTest(MadhareTest.suite());
