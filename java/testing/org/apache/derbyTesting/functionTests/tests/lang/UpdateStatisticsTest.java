@@ -90,18 +90,18 @@ public class UpdateStatisticsTest extends BaseJDBCTestCase {
         //So far the table t1 is empty and we have already created index I1 on 
         //it. Since three was no data in the table when index I1 was created,
         //there will be no row in sysstatistics table
-        stats.assertNoStats();
+        stats.assertNoStatsTable("T1");
         //Now insert some data into t1 and then create a new index on the 
         //table. This will cause sysstatistics table to have one row for this
         //new index. Old index will still not have a row for it in
         //sysstatistics table
         s.executeUpdate("INSERT INTO T1 VALUES(1,'a'),(2,'b'),(3,'c'),(4,'d')");
         s.executeUpdate("CREATE INDEX i2 ON t1(c11)");
-        stats.assertStats(1);
+        stats.assertTableStats("T1", 1);
         //Now update the statistics for the old index I1 using the new stored
         //procedure. Doing this should add a row for it in sysstatistics table
         s.execute("CALL SYSCS_UTIL.SYSCS_UPDATE_STATISTICS('APP','T1','I1')");
-        stats.assertStats(2);
+        stats.assertTableStats("T1", 2);
 
         //calls to system procedure for update statistics is internally
         //converted into ALTER TABLE ... sql but that generated sql format
@@ -112,7 +112,7 @@ public class UpdateStatisticsTest extends BaseJDBCTestCase {
         assertStatementError("42X01", s, 
             "ALTER TABLE APP.T1 UPDATE STATISTICS I1");
         //cleanup
-        s.executeUpdate("DROP TABLE t1");
+        dropTable("T1");
 
         //Try update statistics on global temporary table
 		s.executeUpdate("declare global temporary table SESSION.t1(c11 int, c12 int) on commit delete rows not logged");
@@ -146,7 +146,7 @@ public class UpdateStatisticsTest extends BaseJDBCTestCase {
         //empty
         s.executeUpdate("CREATE INDEX t2i1 ON t2(c21)");
         s.executeUpdate("CREATE INDEX t2i2 ON t2(c22)");
-        stats.assertNoStats();
+        stats.assertNoStatsTable("T2");
         
         PreparedStatement ps = prepareStatement("INSERT INTO T2 VALUES(?,?,?)");
         for (int i=0; i<1000; i++) {
@@ -180,7 +180,7 @@ public class UpdateStatisticsTest extends BaseJDBCTestCase {
 		rtsp = SQLUtilities.getRuntimeStatisticsParser(s);
 		assertTrue(rtsp.usedSpecificIndexForIndexScan("T2","T2I2"));
         //cleanup
-        s.executeUpdate("DROP TABLE t2");
+        dropTable("T2");
         //End of test case for better index selection after statistics
         //availability
         stats.release();
@@ -207,7 +207,7 @@ public class UpdateStatisticsTest extends BaseJDBCTestCase {
         s2.close();
         c2.close();
 
-        s.execute("drop table t");
+        dropTable("T");
         commit();
     }
 
@@ -382,8 +382,10 @@ public class UpdateStatisticsTest extends BaseJDBCTestCase {
         stats.assertTableStats("TEST_TAB_2",1);
         s.execute("CALL SYSCS_UTIL.SYSCS_UPDATE_STATISTICS('APP','TEST_TAB_2', null)");
         stats.assertTableStats("TEST_TAB_2",1);
-        s.execute("drop table TEST_TAB_2");
-        s.execute("drop table TEST_TAB_1");
+        
+        dropTable("TEST_TAB_3");
+        dropTable("TEST_TAB_2");
+        dropTable("TEST_TAB_1");
         stats.release();
     }
 
@@ -480,6 +482,10 @@ public class UpdateStatisticsTest extends BaseJDBCTestCase {
         // Check the counts again.
         stats.assertTableStats(tbl_fk, 1);
         stats.assertTableStats(tbl, 4);
+
+        dropTable(tbl);
+        dropTable(tbl_fk);
+        stats.release();
     }
 
     /**
