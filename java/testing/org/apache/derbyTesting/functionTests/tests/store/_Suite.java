@@ -80,6 +80,7 @@ public class _Suite extends BaseTestCase  {
         suite.addTest(BTreeMaxScanTest.suite());
         suite.addTest(MadhareTest.suite());
         suite.addTest(ServicePropertiesFileTest.suite());
+        suite.addTest(Derby4923Test.suite());
 
         /* Tests that only run in sane builds */
         if (SanityManager.DEBUG) {
