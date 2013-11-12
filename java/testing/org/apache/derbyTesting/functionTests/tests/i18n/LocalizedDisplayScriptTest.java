@@ -110,8 +110,6 @@ public final class LocalizedDisplayScriptTest extends ScriptTestCase {
         Properties uiProps = new Properties();
         uiProps.put("derby.ui.locale","es_AR");
         uiProps.put("derby.ui.codeset","EUC_JP");
-//        suite.addTest(new SystemPropertyTestSetup(
-//                new LocalizedDisplayScriptTest("LocalizedDisplay"), uiProps));
         suite.addTest(new TimeZoneTestSetup(new SystemPropertyTestSetup(
                 new LocalizedDisplayScriptTest("LocalizedDisplay"), uiProps),
                 "America/Los_Angeles"));
