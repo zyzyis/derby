@@ -34,6 +34,17 @@
   <property file="${properties.dir}/sane${sanity}.properties"/>
 
 
+<!-- These properties are used by the Release build process. -->
+  <condition property="isWindows">
+    <os family="windows"/>
+  </condition>
+
+  <condition property="isUnix">
+    <not>
+      <os family="windows"/>
+    </not>
+  </condition>
+
 <!-- Targets -->
 
   <target
