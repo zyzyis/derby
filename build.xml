@@ -1989,6 +1989,15 @@
 
    </target>
 
+   <!-- Targets used to specify the correct ant executable -->
+   <target name="ant-exec-windows" unless="isUnix">
+     <property name="ant.exec" value="ant.bat"/>
+   </target>
+
+   <target name="ant-exec-unix" unless="isWindows">
+     <property name="ant.exec" value="ant"/>
+   </target>
+
    <!--
        Append a file to the notice file
 
@@ -2034,7 +2043,7 @@
    </target>
 
    <!-- Build the user documentation -->
-   <target name="builduserdocs" depends="checkdocsroot">
+   <target name="builduserdocs" depends="ant-exec-windows,ant-exec-unix,checkdocsroot">
 
      <property file="${properties.dir}/release.properties"/>
 
