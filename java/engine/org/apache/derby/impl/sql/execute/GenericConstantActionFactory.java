@@ -959,8 +959,6 @@ public class GenericConstantActionFactory
 	 * @param spsCompSchemaId	the compilation schema for the action and when
 	 *							spses.   If null, will be set to the current default
 	 *							schema
-	 * @param creationTimestamp	when was this trigger created?  if null, will be
-	 *						set to the time that executeConstantAction() is invoked
 	 * @param referencedCols	what columns does this trigger reference (may be null)
 	 * @param referencedColsInTriggerAction	what columns does the trigger 
 	 *						action reference through old/new transition variables
@@ -985,7 +983,6 @@ public class GenericConstantActionFactory
 		UUID				actionSPSId,
 		String				actionText,
 		UUID				spsCompSchemaId,
-		Timestamp			creationTimestamp,
 		int[]				referencedCols,
 		int[]				referencedColsInTriggerAction,
 		String				originalActionText,
@@ -997,7 +994,7 @@ public class GenericConstantActionFactory
 	{
 		return new CreateTriggerConstantAction(triggerSchemaName, triggerName, 
 				eventMask, isBefore, isRow, isEnabled, triggerTable, whenSPSId,
-				whenText, actionSPSId, actionText, spsCompSchemaId, creationTimestamp,
+                whenText, actionSPSId, actionText, spsCompSchemaId,
 				referencedCols, referencedColsInTriggerAction, originalActionText,
 				referencingOld, referencingNew, oldReferencingName, newReferencingName);
 	}

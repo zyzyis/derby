@@ -873,7 +873,6 @@ public class CreateTriggerNode extends DDLStatementNode
 											(actionCompSchemaId == null) ?
 												compSchemaDescriptor.getUUID() :
 												actionCompSchemaId,
-											(Timestamp)null,	// creation time
 											referencedColInts,
 											referencedColsInTriggerAction,
 											originalActionText,

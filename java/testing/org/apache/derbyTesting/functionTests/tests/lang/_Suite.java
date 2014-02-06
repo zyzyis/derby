@@ -225,6 +225,7 @@ public class _Suite extends BaseTestCase  {
         suite.addTest(Derby5652.suite());
         suite.addTest(QueryPlanTest.suite());
         suite.addTest(Derby6131.suite());
+        suite.addTest(Derby5866TriggerOrderTest.suite());
         return suite;
 	}
 }
