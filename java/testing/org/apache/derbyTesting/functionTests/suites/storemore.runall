@@ -16,7 +16,6 @@ store/SpaceTable.sql
 store/testsqldecimal.sql
 store/heapscan.sql
 store/removeStubs.sql
-store/lockTableVti.sql
 store/rollForwardBackup.sql
 store/rollForwardRecovery.sql
 store/readlocks.sql
