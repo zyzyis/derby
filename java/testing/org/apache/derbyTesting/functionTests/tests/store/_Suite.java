@@ -82,7 +82,8 @@ public class _Suite extends BaseTestCase  {
         suite.addTest(ServicePropertiesFileTest.suite());
         suite.addTest(LockTableVtiTest.suite());
         suite.addTest(Derby4923Test.suite());
-
+        suite.addTest(SpaceTableTest.suite());
+        
         /* Tests that only run in sane builds */
         if (SanityManager.DEBUG) {
             suite.addTest(HoldCursorExternalSortJDBC30Test.suite());

@@ -12,7 +12,6 @@ store/rlliso1multi.sql
 store/rlliso2multi.sql
 store/rlliso3multi.sql
 store/TransactionTable.sql
-store/SpaceTable.sql
 store/testsqldecimal.sql
 store/heapscan.sql
 store/removeStubs.sql
